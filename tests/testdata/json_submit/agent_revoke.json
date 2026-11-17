@@ -1,0 +1,20 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "dex_agent_payload",
+    "agent_operation": "revoke",
+    "nonce": "123456789",
+    "name": "review-agent"
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x87263859e03ee49474ec0c3ef66dc4dd63b9d8a933566906f7b8520025f3c1fa57a7d158ea0bd82bbfd17561cd1d5cf15bca97a8a552b80cbe3c6fa978c1261d"
+  },
+  "replay_protection_nonce": "123456789"
+}

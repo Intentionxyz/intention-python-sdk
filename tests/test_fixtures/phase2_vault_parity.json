@@ -1,0 +1,101 @@
+{
+  "vault_distribute_tx": {
+    "hex": "0907000000000000000d00000000000000d2029649000000000000000000000000",
+    "variant": {
+      "wrapper": "VaultTx",
+      "name": "Distribute",
+      "value": 9
+    },
+    "expected": {
+      "vault_id": "7",
+      "nonce": "13",
+      "distribute_amount_usdc": "1234567890"
+    }
+  },
+  "vault_close_helper": {
+    "hex": "070c00000000000000070000000000000002",
+    "variant": {
+      "wrapper": "VaultTx",
+      "name": "SetStatus",
+      "value": 7
+    },
+    "expected": {
+      "vault_id": "7",
+      "nonce": "12",
+      "target_status": {
+        "name": "Closed",
+        "value": 2
+      }
+    }
+  },
+  "max_distribute_positive": {
+    "inputs": {
+      "leader_shares": "100",
+      "total_shares": "100",
+      "tvl_usdc": "1100000000"
+    },
+    "expected": {
+      "result": "1000000000"
+    }
+  },
+  "max_distribute_zero_non_positive": {
+    "inputs": {
+      "leader_shares": "0",
+      "total_shares": "100",
+      "tvl_usdc": "1100000000"
+    },
+    "expected": {
+      "result": "0"
+    }
+  },
+  "max_distribute_zero_min_leader_stake": {
+    "inputs": {
+      "leader_shares": "100",
+      "total_shares": "100",
+      "tvl_usdc": "100000000"
+    },
+    "expected": {
+      "result": "0"
+    }
+  },
+  "derive_subaccount_address_zero": {
+    "inputs": {
+      "main_address": "0x0123456789abcdeffedcba987654321000112233445566778899aabbccddeeff",
+      "number": 0,
+      "u32_number": 0
+    },
+    "expected": {
+      "address": "0x000000000000000000000000df576a65fbc9d44e7390353cd88eae30ad545c24"
+    }
+  },
+  "derive_subaccount_address_seven": {
+    "inputs": {
+      "main_address": "0x0123456789abcdeffedcba987654321000112233445566778899aabbccddeeff",
+      "number": 7,
+      "u32_number": 7
+    },
+    "expected": {
+      "address": "0x00000000000000000000000089e8d5bc984bf5b8ef0b34be1b5280f4ffe4663c"
+    }
+  },
+  "derive_subaccount_address_wrap_negative_one": {
+    "inputs": {
+      "main_address": "0x0123456789abcdeffedcba987654321000112233445566778899aabbccddeeff",
+      "number": -1,
+      "u32_number": 4294967295
+    },
+    "expected": {
+      "address": "0x000000000000000000000000dba548dee6614fcdcc03a9ae97da92809d682d47"
+    }
+  },
+  "derive_subaccount_address_wrap_overflow": {
+    "inputs": {
+      "main_address": "0x0123456789abcdeffedcba987654321000112233445566778899aabbccddeeff",
+      "number": 4294967303,
+      "u32_number": 7
+    },
+    "expected": {
+      "address": "0x00000000000000000000000089e8d5bc984bf5b8ef0b34be1b5280f4ffe4663c"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "multisig_payload",
+    "nonce": "123456789",
+    "account": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "operation": "execute_transfer",
+    "signatures_count": 2,
+    "op": {
+      "operation": "execute",
+      "dex_type": "dex_transfer_payload",
+      "transfer_type": "account_transfer",
+      "nonce": "123456789",
+      "transfers": [
+        {
+          "to_account": "0x4444444444444444444444444444444444444444444444444444444444444444",
+          "asset_id": 0,
+          "amount": "5000000",
+          "account_type": "perp"
+        }
+      ]
+    },
+    "authority_epoch": "3",
+    "expires_at_secs": "9999999999",
+    "proof": {
+      "op_id": "0x7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+      "authority_epoch": "3",
+      "expires_at_secs": "9999999999",
+      "signatures": [
+        "0x414141414141414141414141414141414141414141414141414141414141414142424242424242424242424242424242424242424242424242424242424242421b",
+        "0x616161616161616161616161616161616161616161616161616161616161616162626262626262626262626262626262626262626262626262626262626262621b"
+      ]
+    }
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x62f445dfe6e0dae2e94c62d944e3a9189207dc61960ec255d01dc30c67cff4003b4d3241572c3f77fb516e1d4166c6ea47c9c6ebb26180a185a0988f55f3fe7e"
+  },
+  "replay_protection_nonce": "123456789"
+}

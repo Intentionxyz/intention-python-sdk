@@ -1,0 +1,24 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "vault_payload",
+    "vault_type": "set_params",
+    "nonce": "123456789",
+    "vault_id": "7",
+    "daily_withdraw_limit_bps": 1000,
+    "min_free_balance_ratio_bps": 500,
+    "lockup_seconds": 86400,
+    "always_proportional_close": true
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x0325ece102c06cac805eff63c2e088f2d7eb57395a847acd47602c19320596fa05badad70bc0b6bf66d0606d10fa70521d279978a0f34750b705eabf50a34d12"
+  },
+  "replay_protection_nonce": "123456789"
+}

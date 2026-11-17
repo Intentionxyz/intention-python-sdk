@@ -1,0 +1,28 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "vault_payload",
+    "vault_type": "clp_trader_allowlist_update",
+    "nonce": "123456789",
+    "clp_account": {
+      "address": "0xabababababababababababababababababababababababababababababababab",
+      "number": 3,
+      "sub_address": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+    },
+    "action": "add",
+    "traders": [
+      "0x9999999999999999999999999999999999999999999999999999999999999999"
+    ]
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x25dc71cd0aa2aecba14ac3d824347facec905903cc90e2d240bf7ab6eea08c4d5f802ad56cf6f86940108a0bf3ebd71fdce2e9caeb18806a028243a9922f73a7"
+  },
+  "replay_protection_nonce": "123456789"
+}

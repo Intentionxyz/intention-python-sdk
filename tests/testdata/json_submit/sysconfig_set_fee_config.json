@@ -1,0 +1,45 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "dex_system_config_payload",
+    "system_config_type": "set_fee_config",
+    "nonce": "123456789",
+    "volume_tier_config": {
+      "tiers": [
+        {
+          "volume_threshold": "0",
+          "perp_maker_fee_ppm": 200,
+          "perp_taker_fee_ppm": 500,
+          "spot_maker_fee_ppm": 300,
+          "spot_taker_fee_ppm": 600
+        },
+        {
+          "volume_threshold": "1000000",
+          "perp_maker_fee_ppm": 100,
+          "perp_taker_fee_ppm": 400,
+          "spot_maker_fee_ppm": 200,
+          "spot_taker_fee_ppm": 500
+        }
+      ]
+    },
+    "rebate_tier_config": {
+      "tiers": [
+        {
+          "volume_threshold": "100000",
+          "maker_rebate_ppm": -50
+        }
+      ]
+    }
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x206c7055bee453f162804811e4b42fbe884563a74e9083da71eafd124dc928ec12dff9b6783977174cae67f7432e9a746946cdc878b9fba3ac676e39db668271"
+  },
+  "replay_protection_nonce": "123456789"
+}

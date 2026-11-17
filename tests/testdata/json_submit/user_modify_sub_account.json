@@ -1,0 +1,22 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "dex_user_config_payload",
+    "user_config_type": "modify_sub_account",
+    "nonce": "123456789",
+    "name": "renamed-sub",
+    "sub_address": "0x3333333333333333333333333333333333333333333333333333333333333333",
+    "on_behalf_of": "0x4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x660b5a5571cda0cd5b67de896e8ed4ba711320ac770925c43a989be8f9546ac437c012dc471f877f0c9bdd1a0f188ec17ec84809e39119b95bb1f8ca40d0f327"
+  },
+  "replay_protection_nonce": "123456789"
+}

@@ -1,0 +1,42 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "multisig_payload",
+    "nonce": "123456789",
+    "account": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "operation": "create_policy",
+    "signatures_count": 2,
+    "op": {
+      "operation": "create_policy",
+      "owners": [
+        "0x0000000000000000000000001111111111111111111111111111111111111111",
+        "0x0000000000000000000000002222222222222222222222222222222222222222",
+        "0x0000000000000000000000003333333333333333333333333333333333333333"
+      ],
+      "threshold": 2,
+      "salt": "0x5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+    },
+    "authority_epoch": "3",
+    "expires_at_secs": "9999999999",
+    "proof": {
+      "op_id": "0x7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+      "authority_epoch": "3",
+      "expires_at_secs": "9999999999",
+      "signatures": [
+        "0x414141414141414141414141414141414141414141414141414141414141414142424242424242424242424242424242424242424242424242424242424242421b",
+        "0x616161616161616161616161616161616161616161616161616161616161616162626262626262626262626262626262626262626262626262626262626262621b"
+      ]
+    }
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0xd9426f1116a01658319fcb3233003600c0dc5a32560ac842167b500d42d915945323cb8c19278aff2624869a49c564665afe348715e55ddd6f8c5490f0f73856"
+  },
+  "replay_protection_nonce": "123456789"
+}

@@ -1,0 +1,784 @@
+{
+  "single_events": {
+    "decode_internal_transfer_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_account_transfer_event": {
+      "hex": "1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f50000000000000000000000000000000000000000000000000000000000000000007000000d204000000000000b0040000000000002200000000000000015152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70",
+      "expected": {
+        "from_account": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+        "to_account": "0x3132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f50",
+        "to_subaccount": "0x0",
+        "asset_id": "7",
+        "original_amount": "1234",
+        "net_amount": "1200",
+        "fee_amount": "34",
+        "fee_account": "0x5152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70"
+      }
+    },
+    "decode_cross_transfer_event": {
+      "hex": "0104a1b2c3d47172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f900427000000000000ac260000000000005800000000000000019192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb001",
+      "expected": {
+        "success": true,
+        "msg_id": "0xa1b2c3d4",
+        "to_account": "0x7172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f90",
+        "original_amount": "9988",
+        "net_amount": "9900",
+        "fee_amount": "88",
+        "fee_account": "0x9192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0",
+        "option": "1"
+      }
+    },
+    "decode_faucet_mint_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_create_spot_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_create_perpetual_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_update_leverage_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_set_account_fee_rate_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_set_fee_config_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_update_bridge_signers_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_set_bridge_fees_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_set_faucet_mint_enabled_event": {
+      "hex": "01",
+      "expected": {
+        "success": true
+      }
+    },
+    "decode_create_sub_account_event": {
+      "hex": "b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0",
+      "expected": {
+        "sub_address": "0xb1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0"
+      }
+    },
+    "decode_modify_sub_account_event": {
+      "hex": "c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe010616c7068612d7375626163636f756e74",
+      "expected": {
+        "sub_address": "0xc1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0",
+        "name": "alpha-subaccount"
+      }
+    },
+    "decode_set_user_leverage_event": {
+      "hex": "d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0",
+      "expected": {
+        "sub_address": "0xd1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0"
+      }
+    },
+    "decode_change_position_mode_event": {
+      "hex": "e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff00",
+      "expected": {
+        "sub_address": "0xe1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff00"
+      }
+    },
+    "decode_change_margin_mode_event": {
+      "hex": "f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f10",
+      "expected": {
+        "sub_address": "0xf1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f10"
+      }
+    },
+    "decode_order_placed_event": {
+      "hex": "650000000000000012131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f50510b00000002000000010000008813000000000000301b0f000000000003000000040000000106deadbeefcafe292300000000000000f153650000000000",
+      "expected": {
+        "order_id": "101",
+        "owner": "0x12131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f3031",
+        "sub_address": "0x32333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f5051",
+        "symbol_id": "11",
+        "symbol_type": "2",
+        "side": "1",
+        "quantums": "5000",
+        "subticks": "990000",
+        "order_basic_type": "3",
+        "time_in_force": "4",
+        "reduce_only": true,
+        "transaction_id": "0xdeadbeefcafe",
+        "block_height": "9001",
+        "timestamp": "1700000000",
+        "client_order_id": null
+      }
+    },
+    "decode_order_filled_event": {
+      "hex": "65000000000000004d000000000000000b000000c409000000000000c409000000000000b82e0f0000000000000c00000000000000060000002a2300000000000001f153650000000000",
+      "expected": {
+        "order_id": "101",
+        "fill_order_id": "77",
+        "symbol_id": "11",
+        "filled_quantums": "2500",
+        "remaining_quantums": "2500",
+        "fill_price": "995000",
+        "is_maker": false,
+        "fee": "12",
+        "new_state": "6",
+        "block_height": "9002",
+        "timestamp": "1700000001",
+        "client_order_id": null
+      }
+    },
+    "decode_order_cancelled_event": {
+      "hex": "660000000000000052535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f90910b0000005704000000000000080000002b2300000000000002f153650000000000",
+      "expected": {
+        "order_id": "102",
+        "owner": "0x52535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f7071",
+        "sub_address": "0x72737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f9091",
+        "symbol_id": "11",
+        "remaining_quantums": "1111",
+        "canceled_by": "8",
+        "block_height": "9003",
+        "timestamp": "1700000002",
+        "client_order_id": null
+      }
+    },
+    "decode_order_rejected_event": {
+      "hex": "670000000000000092939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d10b0000000d00000004c001d00d2c2300000000000003f153650000000000",
+      "expected": {
+        "order_id": "103",
+        "owner": "0x92939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1",
+        "sub_address": "0xb2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1",
+        "symbol_id": "11",
+        "reject_reason": "13",
+        "transaction_id": "0xc001d00d",
+        "block_height": "9004",
+        "timestamp": "1700000003",
+        "client_order_id": null
+      }
+    },
+    "decode_fill_event": {
+      "hex": "f5010000000000000b000000e903000000000000ea03000000000000000040e2010000000000150300000000000015161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f90919293940e000000000000000f000000000000002d2300000000000004f1536500000000",
+      "expected": {
+        "fill_order_id": "501",
+        "symbol_id": "11",
+        "maker_order_id": "1001",
+        "taker_order_id": "1002",
+        "maker_client_order_id": null,
+        "taker_client_order_id": null,
+        "price": "123456",
+        "quantums": "789",
+        "maker_address": "0x15161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f3031323334",
+        "maker_sub_address": "0x35363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f5051525354",
+        "taker_address": "0x55565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f7071727374",
+        "taker_sub_address": "0x75767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f9091929394",
+        "maker_fee": "14",
+        "taker_fee": "15",
+        "block_height": "9005",
+        "timestamp": "1700000004"
+      }
+    },
+    "decode_funding_rate_event": {
+      "hex": "11000000220000002b020000000000002e2300000000000005f1536500000000",
+      "expected": {
+        "symbol_id": "17",
+        "funding_rate_ppm": "34",
+        "mark_price": "555",
+        "block_height": "9006",
+        "timestamp": "1700000005"
+      }
+    },
+    "decode_account_updated_event": {
+      "hex": "d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131403000000f1fb090000000000022f2300000000000006f1536500000000",
+      "expected": {
+        "owner": "0xd5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4",
+        "sub_address": "0xf5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f1011121314",
+        "asset_id": "3",
+        "new_balance": "654321",
+        "reason": "2",
+        "block_height": "9007",
+        "timestamp": "1700000006"
+      }
+    }
+  },
+  "unified_events": {
+    "decoded": {
+      "fill_event": {
+        "type": "0x1::dex::FillEvent",
+        "data": "0x150000005902000000000000591b0000000000005a1b0000000000004d01000000000000bc010000000000008d2300000000000064f1536500000000202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f07000000404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f6d616b65722d75736572000000000000010000000a000000000000000b00000000000000f4ffffffffffffffffffffffffffffff0d00000000000000000000000000000004000000f2ffffffffffffffffffffffffffffff00606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f08000000808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f74616b65722d75736572000000000000020000000f000000000000001000000000000000efffffffffffffffffffffffffffffff1200000000000000000000000000000005000000edffffffffffffffffffffffffffffff00",
+        "expected": {
+          "event_type": "FillEvent",
+          "event": {
+            "symbol_id": "21",
+            "fill_order_id": "601",
+            "maker_order_id": "7001",
+            "taker_order_id": "7002",
+            "filled_quantums": "333",
+            "match_subticks": "444",
+            "block_height": "9101",
+            "fill_timestamp": "1700000100",
+            "maker_subaccount_id": {
+              "address": "0x202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+              "number": "7",
+              "sub_address": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+              "user_name": "0x6d616b65722d75736572000000000000"
+            },
+            "maker_direction": "1",
+            "maker_open_quantums": "10",
+            "maker_close_quantums": "11",
+            "maker_opening_fee": "-12",
+            "maker_closing_fee": "13",
+            "maker_new_state": "4",
+            "maker_realized_pnl": "-14",
+            "maker_client_order_id": null,
+            "taker_subaccount_id": {
+              "address": "0x606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f",
+              "number": "8",
+              "sub_address": "0x808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f",
+              "user_name": "0x74616b65722d75736572000000000000"
+            },
+            "taker_direction": "2",
+            "taker_open_quantums": "15",
+            "taker_close_quantums": "16",
+            "taker_opening_fee": "-17",
+            "taker_closing_fee": "18",
+            "taker_new_state": "5",
+            "taker_realized_pnl": "-19",
+            "taker_client_order_id": null
+          }
+        }
+      },
+      "order_placed_event": {
+        "type": "0x1::dex::OrderPlacedEvent",
+        "data": "0xa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebf09000000c0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedf706c616365642d757365720000000000160000000100000002000000b3feffffffffffff5c1100000000000003000000040000000500000006000000c8f1536500000000bd02000000000000be02000000000000070000000501020304050c000000000000002200000000000000c8ffffffffffffffffffffffffffffff4e0000000000000000000000000000000108000000090000000a0000000b0000000c000000b3150000000000000d0000009dffffffffffffff00008e23000000000000c9f1536500000000",
+        "expected": {
+          "event_type": "OrderPlacedEvent",
+          "event": {
+            "subaccount_id": {
+              "address": "0xa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebf",
+              "number": "9",
+              "sub_address": "0xc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedf",
+              "user_name": "0x706c616365642d757365720000000000"
+            },
+            "symbol_id": "22",
+            "symbol_type": "1",
+            "side": "2",
+            "quantums": "-333",
+            "subticks": "4444",
+            "order_basic_type": "3",
+            "time_in_force": "4",
+            "condition_type": "5",
+            "operation": "6",
+            "timestamp": "1700000200",
+            "target_order_id": "701",
+            "order_id": "702",
+            "state": "7",
+            "transaction_id": "0x0102030405",
+            "remaining_quantums": "12",
+            "filled_quantums": "34",
+            "opening_fee": "-56",
+            "closing_fee": "78",
+            "reduce_only": true,
+            "position_mode": "8",
+            "created_by": "9",
+            "canceled_by": "10",
+            "reject_reason": "11",
+            "slippage_tolerance_ppm": "12",
+            "trigger_subticks": "5555",
+            "trigger_price_type": "13",
+            "parent_order_id": "-99",
+            "is_activated": false,
+            "client_order_id": null,
+            "block_height": "9102",
+            "block_timestamp": "1700000201"
+          }
+        }
+      },
+      "order_cancelled_event": {
+        "type": "0x1::dex::OrderCancelledEvent",
+        "data": "0xbf02000000000000e0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f160000000e000000008f23000000000000caf1536500000000",
+        "expected": {
+          "event_type": "OrderCancelledEvent",
+          "event": {
+            "order_id": "703",
+            "owner": "0xe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+            "sub_address": "0x101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+            "symbol_id": "22",
+            "canceled_by": "14",
+            "client_order_id": null,
+            "block_height": "9103",
+            "block_timestamp": "1700000202"
+          }
+        }
+      },
+      "order_rejected_event": {
+        "type": "0x1::dex::OrderRejectedEvent",
+        "data": "0xc002000000000000303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f160000000f000000040a0b0c0d009023000000000000cbf1536500000000",
+        "expected": {
+          "event_type": "OrderRejectedEvent",
+          "event": {
+            "order_id": "704",
+            "owner": "0x303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f",
+            "sub_address": "0x505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f",
+            "symbol_id": "22",
+            "reject_reason": "15",
+            "transaction_id": "0x0a0b0c0d",
+            "client_order_id": null,
+            "block_height": "9104",
+            "block_timestamp": "1700000203"
+          }
+        }
+      },
+      "order_filled_event": {
+        "type": "0x1::dex::OrderFilledEvent",
+        "data": "0xc102000000000000707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeaf160000001000000011000000120000000411223344009123000000000000ccf1536500000000",
+        "expected": {
+          "event_type": "OrderFilledEvent",
+          "event": {
+            "order_id": "705",
+            "owner": "0x707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f",
+            "sub_address": "0x909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeaf",
+            "symbol_id": "22",
+            "basic_type": "16",
+            "side": "17",
+            "state": "18",
+            "transaction_id": "0x11223344",
+            "client_order_id": null,
+            "block_height": "9105",
+            "block_timestamp": "1700000204"
+          }
+        }
+      },
+      "condition_order_placed_event": {
+        "type": "0x1::dex::ConditionOrderPlacedEvent",
+        "data": "0xa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebf09000000c0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedf706c616365642d757365720000000000160000000100000002000000b3feffffffffffff5c1100000000000003000000040000000500000006000000c8f1536500000000bd02000000000000be02000000000000070000000501020304050c000000000000002200000000000000c8ffffffffffffffffffffffffffffff4e0000000000000000000000000000000108000000090000000a0000000b0000000c000000b3150000000000000d0000009dffffffffffffff00008e23000000000000c9f1536500000000",
+        "expected": {
+          "event_type": "ConditionOrderPlacedEvent",
+          "event": {
+            "subaccount_id": {
+              "address": "0xa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebf",
+              "number": "9",
+              "sub_address": "0xc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedf",
+              "user_name": "0x706c616365642d757365720000000000"
+            },
+            "symbol_id": "22",
+            "symbol_type": "1",
+            "side": "2",
+            "quantums": "-333",
+            "subticks": "4444",
+            "order_basic_type": "3",
+            "time_in_force": "4",
+            "condition_type": "5",
+            "operation": "6",
+            "timestamp": "1700000200",
+            "target_order_id": "701",
+            "order_id": "702",
+            "state": "7",
+            "transaction_id": "0x0102030405",
+            "remaining_quantums": "12",
+            "filled_quantums": "34",
+            "opening_fee": "-56",
+            "closing_fee": "78",
+            "reduce_only": true,
+            "position_mode": "8",
+            "created_by": "9",
+            "canceled_by": "10",
+            "reject_reason": "11",
+            "slippage_tolerance_ppm": "12",
+            "trigger_subticks": "5555",
+            "trigger_price_type": "13",
+            "parent_order_id": "-99",
+            "is_activated": false,
+            "client_order_id": null,
+            "block_height": "9102",
+            "block_timestamp": "1700000201"
+          }
+        }
+      },
+      "condition_order_triggered_event": {
+        "type": "0x1::dex::ConditionOrderTriggeredEvent",
+        "data": "0xc202000000000000b0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeef160000001300000014000000009223000000000000cdf1536500000000",
+        "expected": {
+          "event_type": "ConditionOrderTriggeredEvent",
+          "event": {
+            "order_id": "706",
+            "owner": "0xb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecf",
+            "sub_address": "0xd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeef",
+            "symbol_id": "22",
+            "condition_type": "19",
+            "state": "20",
+            "client_order_id": null,
+            "block_height": "9106",
+            "block_timestamp": "1700000205"
+          }
+        }
+      },
+      "funding_rate_event": {
+        "type": "0x1::dex::FundingRateEvent",
+        "data": "0x170000001600000078030000000000009323000000000000cef1536500000000",
+        "expected": {
+          "event_type": "FundingRateEvent",
+          "event": {
+            "symbol_id": "23",
+            "funding_rate_ppm": "22",
+            "mark_price": "888",
+            "block_height": "9107",
+            "timestamp": "1700000206"
+          }
+        }
+      },
+      "account_event": {
+        "type": "0x1::dex::AccountEvent",
+        "data": "0x4142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f600b0000006162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80616363742d7573657200000000000000010000001900000005000000020000000100000001000000e8030000000000000200000006ffffffffffffff1f00000028000000000000002900000000000000d6ffffffffffffff2b00000000000000d4ffffffffffffff2d0000000000000002000000d2ffffffffffffffffffffffffffffff2f000000000000000000000000000000d0ffffffffffffffffffffffffffffff310000000000000000000000000000003200000000000000000000000000000033000000000000000000000000000000340000000000000000000000000000000100cbffffffffffffffffffffffffffffff36000000000000000000000000000000010000001f000000023700000000000000000000000000000038000000000000000000000000000000390000003a00000003000000c5ffffffffffffff010000001f0000000102021027000000000000d00700000000000000f15365000000003075000000000000a00f00000000000080425565000000002cf253650000000050c30000000000000194230000000000002df2536500000000",
+        "expected": {
+          "event_type": "AccountEvent",
+          "event": {
+            "subaccount_id": {
+              "address": "0x4142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60",
+              "number": "11",
+              "sub_address": "0x6162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f80",
+              "user_name": "0x616363742d7573657200000000000000"
+            },
+            "position_mode": "1",
+            "taker_rate": "25",
+            "maker_rate": "5",
+            "assets_size": "2",
+            "perps_size": "1",
+            "assets": [
+              {
+                "asset_id": "1",
+                "quantums": "1000"
+              },
+              {
+                "asset_id": "2",
+                "quantums": "-250"
+              }
+            ],
+            "perps": [
+              {
+                "perpetual_id": "31",
+                "short_quantums": "40",
+                "long_quantums": "41",
+                "delta_sell_closing_long": "-42",
+                "delta_buy_opening_long": "43",
+                "delta_sell_closing_short": "-44",
+                "delta_buy_opening_short": "45",
+                "margin_mode": "2",
+                "funding_index": "-46",
+                "long_position_value": "47",
+                "short_position_value": "-48",
+                "long_imr_quota": "49",
+                "short_imr_quota": "50",
+                "long_mmr_quota": "51",
+                "short_mmr_quota": "52",
+                "trigger_long_adl": true,
+                "trigger_short_adl": false,
+                "long_bankrupt_price": "-53",
+                "short_bankrupt_price": "54"
+              }
+            ],
+            "leverage_infos_size": "1",
+            "leverage_infos": [
+              {
+                "symbol_id": "31",
+                "leverage_info": {
+                  "tier": "2",
+                  "min_notional": "55",
+                  "max_notional": "56",
+                  "im_leverage": "57",
+                  "mm_leverage": "58",
+                  "exponent": "3",
+                  "maintenance_deduction": "-59"
+                }
+              }
+            ],
+            "margin_modes_size": "1",
+            "margin_modes": [
+              {
+                "symbol_id": "31",
+                "margin_mode": "1"
+              }
+            ],
+            "parent_volume_info": {
+              "type": "2",
+              "daily_buckets": [
+                {
+                  "volume_usd": "10000",
+                  "maker_volume_usd": "2000",
+                  "utc_day_start": "1700000000"
+                },
+                {
+                  "volume_usd": "30000",
+                  "maker_volume_usd": "4000",
+                  "utc_day_start": "1700086400"
+                }
+              ],
+              "last_trade_timestamp_sec": "1700000300",
+              "cumulative_volume_usd": "50000",
+              "volume_threshold_reached": true
+            },
+            "block_height": "9108",
+            "timestamp": "1700000301"
+          }
+        }
+      },
+      "mark_price_event": {
+        "type": "0x1::dex::MarkPriceEvent",
+        "data": "0x022900000007b2010000000000060000002a0000000e640300000000000700000095230000000000002ef2536500000000",
+        "expected": {
+          "event_type": "MarkPriceEvent",
+          "event": {
+            "prices": [
+              {
+                "symbol_id": "41",
+                "mark_price": "111111",
+                "exponent": "6"
+              },
+              {
+                "symbol_id": "42",
+                "mark_price": "222222",
+                "exponent": "7"
+              }
+            ],
+            "block_height": "9109",
+            "block_timestamp": "1700000302"
+          }
+        }
+      },
+      "index_price_event": {
+        "type": "0x1::dex::IndexPriceEvent",
+        "data": "0x022b0000001516050000000000080000002c0000001cc80600000000000900000096230000000000002ff2536500000000",
+        "expected": {
+          "event_type": "IndexPriceEvent",
+          "event": {
+            "prices": [
+              {
+                "symbol_id": "43",
+                "index_price": "333333",
+                "exponent": "8"
+              },
+              {
+                "symbol_id": "44",
+                "index_price": "444444",
+                "exponent": "9"
+              }
+            ],
+            "block_height": "9110",
+            "block_timestamp": "1700000303"
+          }
+        }
+      },
+      "funding_prediction_event": {
+        "type": "0x1::dex::FundingPredictionEvent",
+        "data": "0x022d0000007b00000090f25365000000002e000000c801000091f2536500000000972300000000000092f2536500000000",
+        "expected": {
+          "event_type": "FundingPredictionEvent",
+          "event": {
+            "predictions": [
+              {
+                "symbol_id": "45",
+                "funding_rate_ppm": "123",
+                "timestamp": "1700000400"
+              },
+              {
+                "symbol_id": "46",
+                "funding_rate_ppm": "456",
+                "timestamp": "1700000401"
+              }
+            ],
+            "block_height": "9111",
+            "block_timestamp": "1700000402"
+          }
+        }
+      },
+      "fee_statement_event": {
+        "type": "0x1::transaction_fee::FeeStatement",
+        "data": "0x01000000000000000200000000000000030000000000000004000000000000000500000000000000",
+        "expected": {
+          "event_type": "FeeStatement",
+          "event": {
+            "execution_gas_units": "1",
+            "io_gas_units": "2",
+            "storage_fee": "3",
+            "storage_fee_refund": "4",
+            "total_charge_gas_units": "5"
+          }
+        }
+      }
+    },
+    "invalid_hex": {
+      "type": "0x1::dex::FillEvent",
+      "data": "0x0z",
+      "expected": null
+    },
+    "unknown_type": {
+      "type": "0x1::coin::DepositEvent",
+      "data": "0x150000005902000000000000591b0000000000005a1b0000000000004d01000000000000bc010000000000008d2300000000000064f1536500000000202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f07000000404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f6d616b65722d75736572000000000000010000000a000000000000000b00000000000000f4ffffffffffffffffffffffffffffff0d00000000000000000000000000000004000000f2ffffffffffffffffffffffffffffff00606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f08000000808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f74616b65722d75736572000000000000020000000f000000000000001000000000000000efffffffffffffffffffffffffffffff1200000000000000000000000000000005000000edffffffffffffffffffffffffffffff00",
+      "expected": null
+    },
+    "mixed_batch": {
+      "events": [
+        {
+          "type": "0x1::dex::FillEvent",
+          "data": "0x150000005902000000000000591b0000000000005a1b0000000000004d01000000000000bc010000000000008d2300000000000064f1536500000000202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f07000000404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f6d616b65722d75736572000000000000010000000a000000000000000b00000000000000f4ffffffffffffffffffffffffffffff0d00000000000000000000000000000004000000f2ffffffffffffffffffffffffffffff00606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f08000000808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f74616b65722d75736572000000000000020000000f000000000000001000000000000000efffffffffffffffffffffffffffffff1200000000000000000000000000000005000000edffffffffffffffffffffffffffffff00"
+        },
+        {
+          "type": "0x1::coin::DepositEvent",
+          "data": "0x00"
+        },
+        {
+          "type": "0x1::dex::OrderPlacedEvent",
+          "data": {
+            "bad": "shape"
+          }
+        },
+        {
+          "type": "0x1::dex::OrderRejectedEvent",
+          "data": "0x0z"
+        },
+        {
+          "type": "0x1::transaction_fee::FeeStatement",
+          "data": "0x01000000000000000200000000000000030000000000000004000000000000000500000000000000"
+        }
+      ],
+      "expected": [
+        {
+          "index": "0",
+          "event_type": "FillEvent",
+          "event": {
+            "symbol_id": "21",
+            "fill_order_id": "601",
+            "maker_order_id": "7001",
+            "taker_order_id": "7002",
+            "filled_quantums": "333",
+            "match_subticks": "444",
+            "block_height": "9101",
+            "fill_timestamp": "1700000100",
+            "maker_subaccount_id": {
+              "address": "0x202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+              "number": "7",
+              "sub_address": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+              "user_name": "0x6d616b65722d75736572000000000000"
+            },
+            "maker_direction": "1",
+            "maker_open_quantums": "10",
+            "maker_close_quantums": "11",
+            "maker_opening_fee": "-12",
+            "maker_closing_fee": "13",
+            "maker_new_state": "4",
+            "maker_realized_pnl": "-14",
+            "maker_client_order_id": null,
+            "taker_subaccount_id": {
+              "address": "0x606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f",
+              "number": "8",
+              "sub_address": "0x808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f",
+              "user_name": "0x74616b65722d75736572000000000000"
+            },
+            "taker_direction": "2",
+            "taker_open_quantums": "15",
+            "taker_close_quantums": "16",
+            "taker_opening_fee": "-17",
+            "taker_closing_fee": "18",
+            "taker_new_state": "5",
+            "taker_realized_pnl": "-19",
+            "taker_client_order_id": null
+          }
+        },
+        {
+          "index": "4",
+          "event_type": "FeeStatement",
+          "event": {
+            "execution_gas_units": "1",
+            "io_gas_units": "2",
+            "storage_fee": "3",
+            "storage_fee_refund": "4",
+            "total_charge_gas_units": "5"
+          }
+        }
+      ]
+    },
+    "tag_checks": {
+      "known": [
+        "0x1::dex::FillEvent",
+        "0x1::dex::OrderPlacedEvent",
+        "0x1::transaction_fee::FeeStatement"
+      ],
+      "unknown": [
+        "0x1::coin::DepositEvent",
+        "0x1::something::Else"
+      ]
+    }
+  },
+  "helper_vectors": {
+    "hex_prefixed": {
+      "input": "0x68656c6c6f",
+      "expected": {
+        "valid": true,
+        "normalized": "0x68656c6c6f",
+        "without_prefix": "68656c6c6f",
+        "bytes_hex": "68656c6c6f"
+      }
+    },
+    "hex_unprefixed": {
+      "input": "68656c6c6f",
+      "expected": {
+        "valid": true,
+        "normalized": "0x68656c6c6f",
+        "without_prefix": "68656c6c6f",
+        "bytes_hex": "68656c6c6f"
+      }
+    },
+    "hex_too_short": {
+      "input": "",
+      "expected": {
+        "valid": false,
+        "invalid_reason": "too_short"
+      }
+    },
+    "hex_invalid_length": {
+      "input": "0xabc",
+      "expected": {
+        "valid": false,
+        "invalid_reason": "invalid_length"
+      }
+    },
+    "hex_invalid_chars": {
+      "input": "0xzz",
+      "expected": {
+        "valid": false,
+        "invalid_reason": "invalid_hex_chars"
+      }
+    },
+    "hex_ascii": {
+      "input": "0x68656c6c6f",
+      "expected": {
+        "ascii": "hello"
+      }
+    }
+  }
+}

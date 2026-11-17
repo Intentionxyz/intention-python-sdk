@@ -1,0 +1,24 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "dex_system_config_payload",
+    "system_config_type": "set_bridge_fees",
+    "nonce": "123456789",
+    "deposit_fee": "0",
+    "withdrawal_fee": "1000000",
+    "transfer_activate_fee": "1000000",
+    "min_deposit_amount": "5000000",
+    "min_withdrawal_amount": "2000000"
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x51e4da4ef870f8883b69dfe271cabf5ed755e03acf8b8c538305b94fa8e6ee723e844470222bd8aad8592d34f651d3aa0d99f0f85e615dc7238e576248f174b7"
+  },
+  "replay_protection_nonce": "123456789"
+}

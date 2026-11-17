@@ -1,0 +1,26 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "dex_user_config_payload",
+    "user_config_type": "change_margin_mode",
+    "nonce": "123456789",
+    "sub_address": "0x0",
+    "margin_modes": [
+      {
+        "symbol_id": 7,
+        "margin_mode": 1
+      }
+    ]
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0xa00823ff9a5d61cf4db5f380a4e315363fc95717e4c56cc125afbcb7754bd3502818d15c5371ea27f29f5db6d554e4b74cc811d3f5ed21d42cdbcf50778a4047"
+  },
+  "replay_protection_nonce": "123456789"
+}

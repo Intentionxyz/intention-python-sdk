@@ -1,0 +1,20 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "dex_system_config_payload",
+    "system_config_type": "set_faucet_mint_enabled",
+    "nonce": "123456789",
+    "enabled": true
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x9a41814f49aa7cb6e0691742c7a94af2abc2caf826c8a4ddbb06872b75a6e4862e3964a2ff0d5e98d78d5361c2fcb624f1c418dbb1c599ac5cc36c9ed3d30e51"
+  },
+  "replay_protection_nonce": "123456789"
+}

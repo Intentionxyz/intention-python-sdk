@@ -1,0 +1,28 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "9001",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "dex_transfer_payload",
+    "nonce": "123456789",
+    "transfer_type": "cross_transfer",
+    "option": "burn",
+    "transfers": [
+      {
+        "to_account": "0x00000000000000000000000019e7e376e7c213b7e7e7e46cc70a5dd086daff2a",
+        "asset_id": 1,
+        "amount": "4000000",
+        "account_type": "spot"
+      }
+    ]
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0xeadc61546ac5d1e0e94be0ba04298d79b0515f714b0bd94056b4897423b840aa7369b4590c2572458dd73e85891444c79d930c27374bd1e9a3ee6c6707e1241e"
+  },
+  "replay_protection_nonce": "9001"
+}

@@ -1,0 +1,39 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "multisig_payload",
+    "nonce": "123456789",
+    "account": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "operation": "execute_create_subaccount",
+    "signatures_count": 2,
+    "op": {
+      "operation": "execute",
+      "dex_type": "dex_user_config_payload",
+      "user_config_type": "create_sub_account",
+      "nonce": "123456789",
+      "name": "desk-one"
+    },
+    "authority_epoch": "3",
+    "expires_at_secs": "9999999999",
+    "proof": {
+      "op_id": "0x7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+      "authority_epoch": "3",
+      "expires_at_secs": "9999999999",
+      "signatures": [
+        "0x414141414141414141414141414141414141414141414141414141414141414142424242424242424242424242424242424242424242424242424242424242421b",
+        "0x616161616161616161616161616161616161616161616161616161616161616162626262626262626262626262626262626262626262626262626262626262621b"
+      ]
+    }
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0x5d5f5a6e771b0df3fadf8c91698fa8737822065a0bef1d5f7151f2636c9cd9942f06d5cd4e6a0c37010c64000371665e616324b8e58e80b5506a729920b51f2b"
+  },
+  "replay_protection_nonce": "123456789"
+}

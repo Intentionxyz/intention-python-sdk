@@ -1,0 +1,40 @@
+{
+  "sender": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "sequence_number": "18446744073709551615",
+  "max_gas_amount": "200000",
+  "gas_unit_price": "100",
+  "expiration_timestamp_secs": "9999999999",
+  "payload": {
+    "type": "dex_orderless_payload",
+    "dex_type": "multisig_payload",
+    "nonce": "123456789",
+    "account": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "operation": "remove_policy",
+    "signatures_count": 2,
+    "op": {
+      "operation": "remove_policy",
+      "new_auth_key": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "new_key_proof": {
+        "scheme": "secp256k1",
+        "signature": "0x818181818181818181818181818181818181818181818181818181818181818182828282828282828282828282828282828282828282828282828282828282821b"
+      }
+    },
+    "authority_epoch": "3",
+    "expires_at_secs": "9999999999",
+    "proof": {
+      "op_id": "0x7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+      "authority_epoch": "3",
+      "expires_at_secs": "9999999999",
+      "signatures": [
+        "0x414141414141414141414141414141414141414141414141414141414141414142424242424242424242424242424242424242424242424242424242424242421b",
+        "0x616161616161616161616161616161616161616161616161616161616161616162626262626262626262626262626262626262626262626262626262626262621b"
+      ]
+    }
+  },
+  "signature": {
+    "type": "secp256k1_ecdsa_signature",
+    "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
+    "signature": "0xadaa7fdbdfa41ec435464dd92b7a94493cc02cf9ec4935f205cafc5af0c1063131943d42151c9e08d1e0d7f508d52087fb04880822b645b9a76474c5d4cb5449"
+  },
+  "replay_protection_nonce": "123456789"
+}
