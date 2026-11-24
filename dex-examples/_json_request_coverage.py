@@ -79,28 +79,6 @@ from intention_sdk.types.enums import (
 )
 from intention_sdk.core.account import Secp256k1PrivateKey as PrivateKey  # noqa: E402
 from intention_sdk.transactions import RawTransaction, TransactionPayload  # noqa: E402
-from intention_sdk.transactions.vault_payloads import (  # noqa: E402
-    VaultClpBatchCreateManagedAccountsTx,
-    VaultClpConfigTx,
-    VaultClpManagedAccountTx,
-    VaultClpTraderAllowlistUpdateTx,
-    VaultCreateTx,
-    VaultDepositTx,
-    VaultDistributeTx,
-    VaultSetParamsTx,
-    VaultSetStatusTx,
-    VaultTx,
-    VaultWithdrawTx,
-)
-from intention_sdk.types.vault import ClpTraderAllowlistAction  # noqa: E402
-from intention_sdk.types.vault import (
-    ClpTraderAllowlistEntry,
-    ManagedAccountAction,
-    SubaccountId,
-    SymbolAccountsEntry,
-    VaultStatus,
-    VaultTxVariant,
-)
 
 PRIVATE_KEY = (
     "secp256k1-priv-"
@@ -119,8 +97,6 @@ AGENT_ADDRESS = AccountAddress.from_str("0x" + "22" * 32)
 AGENT_EXPIRY = 9999999999
 MASTER_ADDRESS = AccountAddress.from_str("0x" + "44" * 32)
 SUBACCOUNT_ADDRESS = AccountAddress.from_str("0x" + "33" * 32)
-VAULT_SUB = SubaccountId(b"\xab" * 32, 3, b"\xcd" * 32)
-VAULT_TRADER = AccountAddress.from_str("0x" + "99" * 32)
 ADMIN_ADDRESS = AccountAddress.from_str("0x" + "aa" * 32)
 SPOT_TICKER = b"BTC-USDC".ljust(32, b"\x00")
 MAX_NOTIONAL = bytes([0x40, 0x42, 0x0F]) + b"\x00" * 13
@@ -447,114 +423,12 @@ def _user_config_cases() -> List[JsonRequestCase]:
     ]
 
 
-def _vault_case(name: str, vault_tx: VaultTx, vault_type: str) -> JsonRequestCase:
-    return _case(
-        name,
-        DexOrderlessTxVariant.VAULT,
-        vault_tx,
-        {"dex_type": "vault_payload", "vault_type": vault_type},
-    )
-
-
-def _vault_cases() -> List[JsonRequestCase]:
-    return [
-        _vault_case(
-            "vault_create",
-            VaultTx(
-                VaultTxVariant.CREATE,
-                VaultCreateTx(
-                    NONCE,
-                    86400,
-                    True,
-                    5000000000,
-                    "coverage-vault",
-                    "captured request coverage",
-                ),
-            ),
-            "create",
-        ),
-        _vault_case(
-            "vault_deposit",
-            VaultTx(VaultTxVariant.DEPOSIT, VaultDepositTx(7, NONCE, 100000000)),
-            "deposit",
-        ),
-        _vault_case(
-            "vault_withdraw",
-            VaultTx(VaultTxVariant.WITHDRAW, VaultWithdrawTx(7, NONCE, 250000)),
-            "withdraw",
-        ),
-        _vault_case(
-            "vault_distribute",
-            VaultTx(VaultTxVariant.DISTRIBUTE, VaultDistributeTx(7, NONCE, 1000000)),
-            "distribute",
-        ),
-        _vault_case(
-            "vault_clp_config",
-            VaultTx(
-                VaultTxVariant.CLP_CONFIG,
-                VaultClpConfigTx(
-                    NONCE,
-                    True,
-                    VAULT_SUB,
-                    [SymbolAccountsEntry(5, [VAULT_SUB])],
-                    [ClpTraderAllowlistEntry(VAULT_SUB, [VAULT_TRADER])],
-                ),
-            ),
-            "clp_config",
-        ),
-        _vault_case(
-            "vault_clp_managed_account",
-            VaultTx(
-                VaultTxVariant.CLP_MANAGED_ACCOUNT,
-                VaultClpManagedAccountTx(
-                    NONCE, VAULT_SUB, ManagedAccountAction.UPSERT, "ops"
-                ),
-            ),
-            "clp_managed_account",
-        ),
-        _vault_case(
-            "vault_clp_trader_allowlist_update",
-            VaultTx(
-                VaultTxVariant.CLP_TRADER_ALLOWLIST_UPDATE,
-                VaultClpTraderAllowlistUpdateTx(
-                    NONCE, VAULT_SUB, ClpTraderAllowlistAction.ADD, [VAULT_TRADER]
-                ),
-            ),
-            "clp_trader_allowlist_update",
-        ),
-        _vault_case(
-            "vault_clp_batch_create",
-            VaultTx(
-                VaultTxVariant.CLP_BATCH_CREATE_MANAGED_ACCOUNTS,
-                VaultClpBatchCreateManagedAccountsTx(
-                    NONCE, VAULT_TRADER, 10, 5, "bot-", "batch memo"
-                ),
-            ),
-            "clp_batch_create_managed_accounts",
-        ),
-        _vault_case(
-            "vault_set_params",
-            VaultTx(VaultTxVariant.SET_PARAMS, VaultSetParamsTx(NONCE, 7, 1000, 500)),
-            "set_params",
-        ),
-        _vault_case(
-            "vault_set_status",
-            VaultTx(
-                VaultTxVariant.SET_STATUS,
-                VaultSetStatusTx(NONCE, 7, VaultStatus.PAUSED),
-            ),
-            "set_status",
-        ),
-    ]
-
-
 def build_json_request_coverage_cases(account: Account) -> List[JsonRequestCase]:
     cases: List[JsonRequestCase] = []
     cases.extend(_order_cases())
     cases.extend(_transfer_cases(account))
     cases.extend(_agent_cases())
     cases.extend(_user_config_cases())
-    cases.extend(_vault_cases())
     return cases
 
 

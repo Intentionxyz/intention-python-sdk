@@ -7,14 +7,22 @@ from enum import IntEnum
 
 
 class DexOrderlessTxVariant(IntEnum):
+    """The chain's ``DexOrderlessTx`` variant tags.
+
+    Renumbered once, with the chain reset that removed the business Vault
+    variants; from here on, append only and never reorder.
+    """
+
     DEX = 0
     DEX_USER_CONFIG = 1
     DEX_SYSTEM_CONFIG = 2
     DEX_TRANSFER = 3
     DEX_AGENT = 4
-    VAULT = 5
     #: Managing a multisig account, or acting as one.
-    MULTISIG = 6
+    MULTISIG = 5
+    #: Validator operations. Listed so the numbering is complete; this SDK does
+    #: not build them.
+    VALIDATOR = 6
 
 
 class DexOrdersVariant(IntEnum):
@@ -202,14 +210,19 @@ class PerpetualTier(IntEnum):
     C = 2
 
 
-class DexConfigTxVariant(IntEnum):
-    USER_CONFIG = 0
-    SYSTEM_CONFIG = 1
-
-
 class TransactionPayloadVariants(IntEnum):
-    ENTRY_FUNCTION = 0
-    DEX_ORDERLESS = 1
+    """BCS variant tags of the chain's ``TransactionPayload`` enum.
+
+    Same values as the TS, Go and C++ SDKs. Tag 1 (``ModuleBundle``) is
+    deprecated on chain and intentionally absent. This SDK only builds and
+    reads ``DEX_ORDERLESS``.
+    """
+
+    SCRIPT = 0
+    ENTRY_FUNCTION = 2
+    MULTISIG = 3
+    PAYLOAD = 4
+    DEX_ORDERLESS = 5
 
 
 class SigningSchemeInput(IntEnum):
@@ -221,7 +234,8 @@ class SigningSchemeInput(IntEnum):
 # Matches the on-chain multisig protocol. The numbering is consensus
 # critical twice over: it is the BCS variant tag, and ``MultisigOp::kind`` /
 # ``GatedPayload::kind`` are bound into the operation id owners sign. Append only;
-# never renumber.
+# never renumber. (``GatedPayload`` was renumbered once, with the chain reset
+# that removed its business Vault variant.)
 
 
 class MultisigOpVariant(IntEnum):
@@ -242,12 +256,18 @@ class MultisigOpVariant(IntEnum):
 
 
 class GatedPayloadVariant(IntEnum):
-    """A payload a policy account executes through its owners."""
+    """A payload a policy account executes through its owners.
+
+    The tag is also the payload's kind: an ``Execute`` binds ``16 + tag`` into
+    the operation id.
+    """
 
     DEX_TRANSFER = 0
-    VAULT = 1
-    DEX_AGENT = 2
-    CREATE_SUB_ACCOUNT = 3
+    DEX_AGENT = 1
+    CREATE_SUB_ACCOUNT = 2
+    #: Validator key rotation. Listed so the numbering is complete; this SDK does
+    #: not build it.
+    VALIDATOR = 3
 
 
 class KeyProofVariant(IntEnum):

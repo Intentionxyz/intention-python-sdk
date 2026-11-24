@@ -226,7 +226,7 @@ class GatedPayload:
     """
 
     variant: GatedPayloadVariant
-    inner: Union[DexTransferTx, "VaultTx", DexAgentTx, CreateSubAccount]
+    inner: Union[DexTransferTx, DexAgentTx, CreateSubAccount]
 
     def __init__(self, variant: GatedPayloadVariant, inner) -> None:
         self.variant = variant
@@ -235,10 +235,6 @@ class GatedPayload:
     @staticmethod
     def transfer(inner: DexTransferTx) -> "GatedPayload":
         return GatedPayload(GatedPayloadVariant.DEX_TRANSFER, inner)
-
-    @staticmethod
-    def vault(inner) -> "GatedPayload":
-        return GatedPayload(GatedPayloadVariant.VAULT, inner)
 
     @staticmethod
     def agent(inner: DexAgentTx) -> "GatedPayload":
@@ -261,11 +257,7 @@ class GatedPayload:
             return GatedPayload(variant, DexAgentTx.deserialize(deserializer))
         if variant == GatedPayloadVariant.CREATE_SUB_ACCOUNT:
             return GatedPayload(variant, CreateSubAccount.deserialize(deserializer))
-        # Imported here rather than at module scope: ``vault_transactions`` reaches
-        # back into the transaction types this module also imports.
-        from .vault_payloads import VaultTx
-
-        return GatedPayload(variant, VaultTx.deserialize(deserializer))
+        raise ValueError(f"Unknown GatedPayload variant: {variant}")
 
     @property
     def nonce(self) -> int:
@@ -559,7 +551,6 @@ def submit_operation_name(op: MultisigOp) -> str:
     if isinstance(op, MultisigOpExecute):
         return {
             GatedPayloadVariant.DEX_TRANSFER: "execute_transfer",
-            GatedPayloadVariant.VAULT: "execute_vault",
             GatedPayloadVariant.DEX_AGENT: "execute_agent",
             GatedPayloadVariant.CREATE_SUB_ACCOUNT: "execute_create_subaccount",
         }[op.payload.variant]
@@ -585,9 +576,9 @@ def derive_multisig_account_address(
     creator and salt are in the preimage, so one creator can hold several multisig
     accounts and the address is computable before the transaction is sent.
 
-    SHA3-256, not Keccak-256: the same hash the vault and subaccount derivations
-    use, and the leading twenty bytes are right-aligned so every derived address in
-    this system stays EVM-formatted and a wallet can render it.
+    SHA3-256, not Keccak-256: the same hash the subaccount derivation uses, and
+    the leading twenty bytes are right-aligned so every derived address in this
+    system stays EVM-formatted and a wallet can render it.
     """
     digest = hashlib.sha3_256(
         MULTISIG_ADDRESS_DOMAIN

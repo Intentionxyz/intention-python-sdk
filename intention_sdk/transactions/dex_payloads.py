@@ -28,6 +28,7 @@ from ..types.enums import (
     StpMode,
     SymbolType,
     TimeInForce,
+    TransactionPayloadVariants,
     TriggerPriceType,
 )
 
@@ -1879,13 +1880,20 @@ class ReferralParameters:
         serializer.serialize_u64(self.min_claim_amount)
 
 
+#: ``DexSystemConfigTx::Fee``: the domain the referral configuration belongs to.
+_DEX_SYSTEM_CONFIG_FEE_DOMAIN = 2
+#: ``FeeTx::SetReferralConfig``, inside the Fee domain.
+_FEE_TX_SET_REFERRAL_CONFIG = 2
+
+
 class SetReferralConfig:
     def __init__(self, nonce: int, parameters: ReferralParameters):
         self.nonce = nonce
         self.parameters = parameters
 
     def serialize(self, serializer: Serializer) -> None:
-        serializer.serialize_u32_as_uleb128(36)
+        serializer.serialize_u32_as_uleb128(_DEX_SYSTEM_CONFIG_FEE_DOMAIN)
+        serializer.serialize_u32_as_uleb128(_FEE_TX_SET_REFERRAL_CONFIG)
         serializer.serialize_u64(self.nonce)
         self.parameters.serialize(serializer)
 
@@ -1957,13 +1965,8 @@ class DexOrderlessTx:
             inner = DexTransferTx.deserialize(deserializer)
         elif variant == DexOrderlessTxVariant.DEX_AGENT:
             inner = DexAgentTx.deserialize(deserializer)
-        elif variant == DexOrderlessTxVariant.VAULT:
-            from .vault_payloads import VaultTx
-
-            inner = VaultTx.deserialize(deserializer)
         elif variant == DexOrderlessTxVariant.MULTISIG:
-            # Imported inside the branch for the same reason the vault types are:
-            # that module imports this one.
+            # Imported inside the branch: that module imports this one.
             from .multisig_payloads import DexMultisigTx
 
             inner = DexMultisigTx.deserialize(deserializer)
@@ -1986,7 +1989,7 @@ class TransactionPayload(Serializable):
     builds or reads one.
     """
 
-    DEX_ORDERLESS: int = 5
+    DEX_ORDERLESS: int = int(TransactionPayloadVariants.DEX_ORDERLESS)
 
     variant: int
     value: "DexOrderlessTx"

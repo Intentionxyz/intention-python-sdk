@@ -1,219 +1,140 @@
 # Copyright (c) Intention Foundation
 # SPDX-License-Identifier: Apache-2.0
 
-"""
-14 - DEX REST API Data Query Endpoints Test
+"""Query market history and optional account data without submitting transactions."""
 
-Covers all DEX REST API query endpoints used by the trading-web frontend
-
-Environment variables:
-  DEX_REST_API_URL  -- New REST API base URL
-  DEX_API_URL       -- Legacy DEX API URL
-  INTENTION_NODE_URL -- Fullnode URL
-
-Run: python dex-examples/14_dex_rest_queries.py
-"""
+from __future__ import annotations
 
 import asyncio
-import json
+import os
+from typing import Mapping, Optional, Union
 
 import httpx
 
 from _common import (
     TEST_SYMBOL_ID,
+    direct_async_client,
     get_dex_api_url,
     get_dex_rest_api_url,
-    get_fullnode_base,
     get_node_url,
-    get_or_create_account,
-    print_env_info,
-    print_header,
+    load_account_from_env,
 )
-
-from intention_sdk.api.client import RestClient
-
-# ===== Utility functions =====
-
-SYMBOL_ID_TO_TICKER = {0: "BTC-USDC", 1: "ETH-USDC"}
+from intention_sdk import AccountAddress
 
 
-def get_default_market_ticker() -> str:
-    return SYMBOL_ID_TO_TICKER.get(TEST_SYMBOL_ID, "BTC-USD")
-
-
-async def query_endpoint(name: str, url: str) -> dict:
-    """Generic GET request with unified success/failure handling"""
+async def show_query(
+    client: httpx.AsyncClient,
+    name: str,
+    url: str,
+    params: Optional[Mapping[str, Union[str, int]]] = None,
+) -> bool:
     try:
-        async with httpx.AsyncClient(timeout=30) as client:
-            response = await client.get(url)
-            if not response.is_success:
-                body = response.text[:200]
-                return {"name": name, "url": url, "ok": False, "status": response.status_code, "data": None, "error": f"{response.status_code}: {body}"}
-            data = response.json()
-            return {"name": name, "url": url, "ok": True, "status": response.status_code, "data": data}
-    except Exception as err:
-        return {"name": name, "url": url, "ok": False, "status": 0, "data": None, "error": str(err)}
+        response = await client.get(url, params=params)
+        response.raise_for_status()
+        payload = response.json()
+        if isinstance(payload, dict) and payload.get("code") not in (None, 0):
+            raise ValueError(payload.get("message", payload["code"]))
+    except (httpx.HTTPError, ValueError) as exc:
+        print(f"[FAIL] {name}: {exc}")
+        return False
 
-
-def print_result(result: dict) -> None:
-    """Print query result summary"""
-    icon = "OK" if result["ok"] else "FAIL"
-    print(f"\n[{icon}] {result['name']}")
-    print(f"  URL: {result['url']}")
-
-    if not result["ok"]:
-        print(f"  Error: {result['error']}")
-        return
-
-    data = result["data"]
-    if data is None:
-        print("  Response: (empty)")
-        return
-
-    # Print first 300 characters of JSON
-    text = json.dumps(data)
-    print(f"  Response: {text[:300]}{'...' if len(text) > 300 else ''}")
-
-
-async def main():
-    print("====================================")
-    print("  14 - DEX REST API Data Query Endpoints Test")
-    print("====================================\n")
-
-    rest_client = RestClient(get_node_url())
-    account = await get_or_create_account(rest_client)
-    owner_addr = str(account.account_address)
-    print_env_info()
-    print("Account address:", owner_addr)
-
-    dex_rest_url = get_dex_rest_api_url()
-    dex_api_url = get_dex_api_url()
-    fullnode_base = get_fullnode_base()
-
-    print("\nAPI endpoint configuration:")
-    print("  DEX REST API (new):", dex_rest_url or "(not configured)")
-    print("  DEX API (legacy):", dex_api_url or "(not configured)")
-    print("  Fullnode:", fullnode_base or "(not configured)")
-
-    market_ticker = get_default_market_ticker()
-    print("  Test market:", market_ticker, f"(symbol_id={TEST_SYMBOL_ID})")
-
-    results = []
-
-    # ==============================
-    # A. New DEX REST API Endpoints
-    # ==============================
-
-    if dex_rest_url:
-        print_header("A. DEX REST API Endpoints (new)")
-
-        endpoints = [
-            ("A1. Perpetual market config", f"{dex_rest_url}/v1/perpetualMarkets"),
-            ("A2. Order book query", f"{dex_rest_url}/v1/orderbooks/perpetualMarket/{market_ticker}"),
-            ("A3. Candlestick data query", f"{dex_rest_url}/v1/candles/perpetualMarkets/{market_ticker}?resolution=1MIN&limit=10"),
-            ("A4. Active orders query", f"{dex_rest_url}/v1/orders?address={owner_addr}&status=OPEN,PARTIALLY_FILLED"),
-            ("A5. Order history query", f"{dex_rest_url}/v1/orderHistory?address={owner_addr}"),
-            ("A6. Fill records query", f"{dex_rest_url}/v1/fills?address={owner_addr}"),
-            ("A7. Trade history query", f"{dex_rest_url}/v1/tradeHistory?address={owner_addr}&limit=10"),
-            ("A8. Perpetual positions query", f"{dex_rest_url}/v1/perpetualPositions?address={owner_addr}&subaccountNumber=0"),
-            ("A9. Transfer records query", f"{dex_rest_url}/v1/transfers?address={owner_addr}"),
-            ("A10. Funding rate records query", f"{dex_rest_url}/v1/fundingPayments?address={owner_addr}"),
-            ("A11. Sub-account balance query", f"{dex_rest_url}/v1/addresses/{owner_addr}"),
-        ]
-
-        for name, url in endpoints:
-            result = await query_endpoint(name, url)
-            print_result(result)
-            results.append(result)
-
-        print_header("A12. Query Order by Transaction Hash (example)")
-        print("  Endpoint: GET /v1/dex/orders/by_txn_hash/{txHash}")
-        print("  Skipped: requires a valid txHash")
+    data = payload.get("data", payload) if isinstance(payload, dict) else payload
+    candles = data.get("candles") if isinstance(data, dict) else None
+    if isinstance(candles, list):
+        print(f"[OK] {name}: {len(candles)} candles")
+        if candles:
+            latest = candles[0]
+            print(
+                f"     Latest candle opened at {latest['startedAt']}, close {latest['close']}"
+            )
     else:
-        print("\nDEX_REST_API_URL not configured, skipping new REST API endpoint tests")
+        print(f"[OK] {name}")
+    return True
 
-    # ==============================
-    # B. Legacy DEX API Endpoints
-    # ==============================
 
-    if dex_api_url:
-        print_header("B. DEX API Endpoints (legacy)")
+async def main() -> int:
+    relayer = get_dex_rest_api_url()
+    if not relayer:
+        raise SystemExit(
+            "Set DEX_REST_API_URL (or DEX_REST_URL) to the Relayer base URL"
+        )
 
-        legacy_endpoints = [
-            ("B1. Agent list query", f"{dex_api_url}/agents/{owner_addr}"),
-            ("B2. Perpetual config query", f"{dex_api_url}/perpetuals"),
-            ("B3. Sub-account info query", f"{dex_api_url}/accounts/{owner_addr}"),
-        ]
+    market = os.getenv("SYMBOL") or {0: "BTC-USDC", 1: "ETH-USDC"}.get(TEST_SYMBOL_ID)
+    if not market:
+        raise SystemExit("Set SYMBOL to a market ticker such as BTC-USDC")
 
-        for name, url in legacy_endpoints:
-            result = await query_endpoint(name, url)
-            print_result(result)
-            results.append(result)
-    else:
-        print("\nDEX_API_URL not configured, skipping legacy API endpoint tests")
+    owner = os.getenv("ACCOUNT_ADDRESS")
+    if owner:
+        owner = str(AccountAddress.from_str_relaxed(owner))
+    elif os.getenv("PRIVATE_KEY"):
+        owner = str(load_account_from_env().account_address)
 
-    # ==============================
-    # C. Fullnode DEX Endpoints
-    # ==============================
+    candle_url = f"{relayer}/v1/candles/perpetualMarkets/{market}"
+    queries: list[tuple[str, str, Optional[Mapping[str, Union[str, int]]]]] = [
+        ("Perpetual markets", f"{relayer}/v1/perpetualMarkets", None),
+        ("Order book", f"{relayer}/v1/orderbooks/perpetualMarket/{market}", None),
+        ("1-minute candles", candle_url, {"resolution": "1m", "limit": 10}),
+    ]
 
-    if fullnode_base:
-        print_header("C. Fullnode DEX Endpoints")
+    if owner:
+        address = {"address": owner}
+        queries.extend(
+            [
+                ("Open orders", f"{relayer}/v1/orders", address),
+                ("Order history", f"{relayer}/v1/orderHistory", address),
+                ("Fills", f"{relayer}/v1/fills", address),
+                (
+                    "Trade history",
+                    f"{relayer}/v1/tradeHistory",
+                    {**address, "limit": 10},
+                ),
+                ("Positions", f"{relayer}/v1/perpetualPositions", address),
+                ("Transfers", f"{relayer}/v1/transfers", address),
+                ("Funding payments", f"{relayer}/v1/fundingPayments", address),
+                ("Subaccount balances", f"{relayer}/v1/addresses/{owner}", None),
+            ]
+        )
 
-        fullnode_endpoints = [
-            ("C1. Mark price query", f"{fullnode_base}/v1/dex/mark_prices"),
-            ("C2. DEX sub-account query", f"{fullnode_base}/v1/dex/accounts/{owner_addr}"),
-        ]
+    node_configured = any(
+        os.getenv(key)
+        for key in ("INTENTION_NODE_URL", "INTENTION_NODE_API_URL", "FULLNODE_URL")
+    )
+    if node_configured or os.getenv("DEX_API_URL"):
+        dex = get_dex_api_url()
+        queries.append(("Node perpetuals", f"{dex}/perpetuals", None))
+        if owner:
+            queries.extend(
+                [
+                    ("Agent list", f"{dex}/agents/{owner}", None),
+                    ("Node DEX accounts", f"{dex}/accounts/{owner}", None),
+                ]
+            )
 
-        for name, url in fullnode_endpoints:
-            result = await query_endpoint(name, url)
-            print_result(result)
-            results.append(result)
-    else:
-        print("\nINTENTION_NODE_URL not configured, skipping fullnode DEX endpoint tests")
+    tx_hash = os.getenv("TX_HASH")
+    if tx_hash and not node_configured:
+        raise SystemExit("Set INTENTION_NODE_URL (or FULLNODE_URL) when using TX_HASH")
+    if node_configured:
+        node = get_node_url().rstrip("/")
+        queries.append(
+            (
+                "Index price",
+                f"{node}/oracle/prices",
+                {"symbol": market, "type": "IndexPrice"},
+            )
+        )
+        if tx_hash:
+            queries.append(
+                ("Transaction by hash", f"{node}/transactions/by_hash/{tx_hash}", None)
+            )
 
-    # ==============================
-    # Summary
-    # ==============================
+    async with direct_async_client() as client:
+        successful = 0
+        for name, url, params in queries:
+            successful += await show_query(client, name, url, params)
 
-    print_header("Query Results Summary")
-
-    succeeded = [r for r in results if r["ok"]]
-    failed = [r for r in results if not r["ok"]]
-
-    print(f"Total: {len(results)} endpoints")
-    print(f"  Succeeded: {len(succeeded)}")
-    print(f"  Failed: {len(failed)}")
-
-    if failed:
-        print("\nFailed endpoints:")
-        for r in failed:
-            print(f"  - {r['name']}: {r['error']}")
-
-    print("\nCovered endpoints list:")
-    print("  [New DEX REST API]")
-    print("    GET /v1/perpetualMarkets          -- Market config")
-    print("    GET /v1/orderbooks/perpetualMarket -- Order book")
-    print("    GET /v1/candles/perpetualMarkets   -- Candlestick data")
-    print("    GET /v1/orders                     -- Active orders")
-    print("    GET /v1/orderHistory               -- Order history")
-    print("    GET /v1/fills                      -- Fill records")
-    print("    GET /v1/tradeHistory               -- Trade history")
-    print("    GET /v1/perpetualPositions          -- Position query")
-    print("    GET /v1/transfers                  -- Transfer records")
-    print("    GET /v1/fundingPayments            -- Funding rates")
-    print("    GET /v1/addresses                  -- Sub-account balance")
-    print("    GET /v1/dex/orders/by_txn_hash     -- Query order by hash")
-    print("  [Legacy DEX API]")
-    print("    GET /agents/:address               -- Agent list")
-    print("    GET /perpetuals                    -- Perpetual config")
-    print("    GET /accounts/:address             -- Sub-account info")
-    print("  [Fullnode DEX]")
-    print("    GET /v1/dex/mark_prices            -- Mark prices")
-    print("    GET /v1/dex/accounts/:address      -- DEX sub-accounts")
-
-    print("\n===== All tests completed =====")
-    await rest_client.close()
+    print(f"{successful}/{len(queries)} queries succeeded")
+    return int(successful != len(queries))
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    raise SystemExit(asyncio.run(main()))

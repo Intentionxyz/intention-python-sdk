@@ -66,15 +66,6 @@ from .referral_client import (
     ReferralPublicParameters,
     ReferralSource,
 )
-from .vault_client import (
-    ClpAllowlistEntry,
-    DepositorPosition,
-    SubaccountIdResponse,
-    VaultClient,
-    VaultOrder,
-    VaultPosition,
-    VaultState,
-)
 from .websocket_client import (
     IntentionWebSocketClient,
 )
@@ -85,8 +76,6 @@ __all__ = [
     "ApiError",
     "BuildHelper",
     "ClientConfig",
-    "ClpAllowlistEntry",
-    "DepositorPosition",
     "DexAccountClient",
     "DexAuthority",
     "DexExecutionResult",
@@ -123,17 +112,12 @@ __all__ = [
     "RelayerOpenOrdersProvider",
     "ResourceNotFound",
     "RestClient",
-    "SubaccountIdResponse",
     "SubmitHelper",
     "SubmitOptions",
     "TraderClient",
     "TransactionExecutionError",
     "TransactionHelper",
     "TransactionTimeoutError",
-    "VaultClient",
-    "VaultOrder",
-    "VaultPosition",
-    "VaultState",
     "build_submission_body",
     "intention_config",
     "order_outcomes_from_events",

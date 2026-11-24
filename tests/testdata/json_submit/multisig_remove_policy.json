@@ -34,7 +34,7 @@
   "signature": {
     "type": "secp256k1_ecdsa_signature",
     "public_key": "0x044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1",
-    "signature": "0xadaa7fdbdfa41ec435464dd92b7a94493cc02cf9ec4935f205cafc5af0c1063131943d42151c9e08d1e0d7f508d52087fb04880822b645b9a76474c5d4cb5449"
+    "signature": "0xf912065492ed3926db1cebf0a8cd1b4ebb5f70224647264fb2ba6606acae6a874b110386938ac6d6247ad33e05b21627b8ec006aaf6a730cb122c213c9eb375b"
   },
   "replay_protection_nonce": "123456789"
 }

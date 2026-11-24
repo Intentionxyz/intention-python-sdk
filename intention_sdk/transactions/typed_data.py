@@ -472,7 +472,7 @@ def _typed_data_digest(raw_txn) -> Optional[bytes]:
             return None
 
     else:
-        # Orders, vault operations, admin config: agent- or admin-signed.
+        # Orders and admin config: agent- or admin-signed.
         return None
 
     return eip712_digest(domain, sh)

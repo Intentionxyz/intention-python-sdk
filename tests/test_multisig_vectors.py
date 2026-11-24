@@ -61,8 +61,6 @@ from intention_sdk.transactions.multisig_typed_data import (
     key_challenge_digest,
     submit_struct_hash,
 )
-from intention_sdk.transactions.vault_payloads import VaultDepositTx, VaultTx
-from intention_sdk.types.vault import VaultTxVariant
 
 _VECTORS = json.loads(
     (Path(__file__).parent / "testdata" / "multisig_signing_vectors.json").read_text()
@@ -152,7 +150,7 @@ def _internal_transfer(nonce: int, items) -> MultisigOpExecute:
 
 
 def every_operation() -> List[MultisigOp]:
-    """The eighteen reference operations in fixture order, with explicit inputs."""
+    """The seventeen reference operations in fixture order, with explicit inputs."""
     return [
         MultisigOpCreate(OWNERS, 2, _repeated(0x00)),
         MultisigOpInstall(OWNERS, 2),
@@ -195,18 +193,13 @@ def every_operation() -> List[MultisigOp]:
         ),
         MultisigOpExecute(GatedPayload.agent(DexAgentTx.revoke_all(29))),
         MultisigOpExecute(GatedPayload.create_sub_account(CreateSubAccount(27, "treasury"))),
-        MultisigOpExecute(
-            GatedPayload.vault(
-                VaultTx(VaultTxVariant.DEPOSIT, VaultDepositTx(3, 28, 10_000_000))
-            )
-        ),
     ]
 
 
 class MultisigVectorsTest(unittest.TestCase):
     def test_the_fixture_is_the_version_this_sdk_implements(self) -> None:
         self.assertEqual(_VECTORS["authorization_version"], 1)
-        self.assertEqual(len(_VECTORS["operations"]), 18)
+        self.assertEqual(len(_VECTORS["operations"]), 17)
 
     def test_the_domain_separator_is_the_one_the_chain_hashes(self) -> None:
         self.assertEqual(
@@ -333,7 +326,10 @@ class MultisigVectorsTest(unittest.TestCase):
         part an SDK gets wrong silently: the envelope's field order and the
         ``Option<MultisigProof>`` tag. A proof written in the wrong place
         does not fail as a missing field -- the node reads the next length byte as
-        data and answers ``INVALID_SIGNATURE``.
+        data and answers ``INVALID_SIGNATURE``. When the business Vault variants
+        were removed, only the two tags (Multisig 6 -> 5, DexAgent 2 -> 1) and
+        the proof's operation id (from the regenerated vectors) were rewritten;
+        the layout is unchanged.
         """
         op = MultisigOpExecute(GatedPayload.agent(DexAgentTx.revoke_all(29)))
         op_id = multisig_operation_id(CHAIN_ID, ACCOUNT, EPOCH, op, EXPIRES)
@@ -352,7 +348,7 @@ class MultisigVectorsTest(unittest.TestCase):
 
         self.assertEqual(
             _hex(_bcs(envelope)),
-            "0x060700000000000000000000000000000000000000111111111111111111111111111111111111111105021d000000000000000201ee20e2ba2928a3c191dff8f1244c7b335fe8064ba8a11ad628abac979e18333a030000000000000000d2496b0000000002313131313131313131313131313131313131313131313131313131313131313132323232323232323232323232323232323232323232323232323232323232321b414141414141414141414141414141414141414141414141414141414141414142424242424242424242424242424242424242424242424242424242424242421c",
+            "0x050700000000000000000000000000000000000000111111111111111111111111111111111111111105011d00000000000000020149c01d04950832e9c11036e41abc4a9fa94ab308075cfd908a9657310223b921030000000000000000d2496b0000000002313131313131313131313131313131313131313131313131313131313131313132323232323232323232323232323232323232323232323232323232323232321b414141414141414141414141414141414141414141414141414141414141414142424242424242424242424242424242424242424242424242424242424242421c",
         )
 
         # And it reads back: a decoder that cannot is one the explorer and the
@@ -376,7 +372,7 @@ class MultisigVectorsTest(unittest.TestCase):
 
         self.assertEqual(
             _hex(_bcs(envelope)),
-            "0x0608000000000000000000000000000000000000001111111111111111111111111111111111111111040101010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "0x0508000000000000000000000000000000000000001111111111111111111111111111111111111111040101010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         )
 
     def test_a_revoke_all_is_not_a_revoke_with_an_empty_name(self) -> None:

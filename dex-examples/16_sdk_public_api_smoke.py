@@ -10,9 +10,6 @@ from intention_sdk import (
     AccountAddress,
     DexTransferTx,
     Hex,
-    VaultTx,
-    build_vault_distribute,
-    calculate_max_distribute_for_leader,
     decode_dex_event,
     decode_transaction_events,
     derive_subaccount_address,
@@ -25,7 +22,7 @@ PHASE1_FIXTURE_PATH = (
     REPO_ROOT / "tests" / "test_fixtures" / "phase1_protocol_parity.json"
 )
 PHASE2_FIXTURE_PATH = (
-    REPO_ROOT / "tests" / "test_fixtures" / "phase2_vault_parity.json"
+    REPO_ROOT / "tests" / "test_fixtures" / "phase2_subaccount_parity.json"
 )
 PHASE3_FIXTURE_PATH = (
     REPO_ROOT / "tests" / "test_fixtures" / "phase3_event_parity.json"
@@ -65,23 +62,6 @@ def main() -> None:
     print("  Transfer variant:", transfer_tx.variant.name)
     print()
 
-    vault_fixture = phase2["vault_distribute_tx"]
-    vault_tx = VaultTx.deserialize(Deserializer(bytes.fromhex(vault_fixture["hex"])))
-    rebuilt_vault = build_vault_distribute(
-        vault_id=int(vault_fixture["expected"]["vault_id"]),
-        nonce=int(vault_fixture["expected"]["nonce"]),
-        distribute_amount_usdc=int(vault_fixture["expected"]["distribute_amount_usdc"]),
-    )
-    assert _serialize_hex(rebuilt_vault) == vault_fixture["hex"]
-
-    max_fixture = phase2["max_distribute_positive"]
-    max_result = calculate_max_distribute_for_leader(
-        leader_shares=int(max_fixture["inputs"]["leader_shares"]),
-        total_shares=int(max_fixture["inputs"]["total_shares"]),
-        tvl_usdc=int(max_fixture["inputs"]["tvl_usdc"]),
-    )
-    assert max_result == int(max_fixture["expected"]["result"])
-
     derive_fixture = phase2["derive_subaccount_address_seven"]
     derived_subaccount = derive_subaccount_address(
         AccountAddress.from_str(derive_fixture["inputs"]["main_address"]),
@@ -89,9 +69,7 @@ def main() -> None:
     )
     assert derived_subaccount.to_string_long() == derive_fixture["expected"]["address"]
 
-    print("Phase 2 vault: builders + helpers")
-    print("  Vault variant:", vault_tx.variant.name)
-    print("  Max distribute:", max_result)
+    print("Phase 2 subaccount: address derivation")
     print("  Derived subaccount:", derived_subaccount)
     print()
 

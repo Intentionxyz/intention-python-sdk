@@ -147,7 +147,8 @@ class Intention:
 
     def _url(self, path: str) -> str:
         base = self.config.get_fullnode_url().rstrip("/")
-        return f"{base}/{path.lstrip('/')}"
+        endpoint = path.lstrip("/")
+        return f"{base}/{endpoint}" if endpoint else base
 
     async def _get(self, path: str, **params: Any) -> Any:
         import httpx

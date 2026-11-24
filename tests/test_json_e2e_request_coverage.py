@@ -200,7 +200,7 @@ class TestDexExamplesJsonSubmitRequestCoverage(unittest.IsolatedAsyncioTestCase)
 
         result = await coverage.run_captured_json_request_coverage()
 
-        self.assertEqual(result["json_case_count"], 25)
+        self.assertEqual(result["json_case_count"], 15)
         self.assertEqual(
             set(result["payload_families"]),
             {
@@ -208,13 +208,11 @@ class TestDexExamplesJsonSubmitRequestCoverage(unittest.IsolatedAsyncioTestCase)
                 "dex_transfer_payload",
                 "dex_agent_payload",
                 "dex_user_config_payload",
-                "vault_payload",
             },
         )
         self.assertIn("dex_place", result["case_names"])
         self.assertIn("transfer_cross_mint_with_proof", result["case_names"])
         self.assertIn("user_adjust_isolated_margin", result["case_names"])
-        self.assertIn("vault_clp_batch_create", result["case_names"])
         self.assertTrue(all(ct == MIME_JSON for ct in result["json_content_types"]))
         self.assertEqual(result["helper_default_content_type"], MIME_JSON)
         self.assertEqual(

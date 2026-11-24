@@ -60,7 +60,6 @@ from .typed_data import (
     intention_chain_name,
     struct_hash,
 )
-from ..types.vault import VaultTxVariant
 from .multisig_payloads import (
     MULTISIG_AUTHORIZATION_VERSION,
     GatedPayload,
@@ -100,10 +99,6 @@ TYPE_REVOKE_AGENT = b"IntentionMultisig_RevokeAgent(string intentionChain,addres
 #: specific grant would name a grant that is not the one being pulled.
 TYPE_REVOKE_ALL_AGENTS = b"IntentionMultisig_RevokeAllAgents(string intentionChain,address account,uint64 authorityEpoch,uint64 nonce,uint64 expiresAt,bytes32 digest)"
 TYPE_CREATE_SUBACCOUNT = b"IntentionMultisig_CreateSubAccount(string intentionChain,address account,uint64 authorityEpoch,string name,uint64 nonce,uint64 expiresAt,bytes32 digest)"
-#: Vault operations are not rendered field by field: the single-signer path signs
-#: them opaquely too. The operation name and the nonce are shown; everything else
-#: is covered by ``digest``.
-TYPE_VAULT_OPERATION = b"IntentionMultisig_VaultOperation(string intentionChain,address account,uint64 authorityEpoch,string operation,uint64 nonce,uint64 expiresAt,bytes32 digest)"
 
 #: Item types, hashed on their own for the ``*Batch`` struct arrays. Deliberately
 #: identical to the single-signer ones: an item is the same thing whoever approves it.
@@ -119,19 +114,6 @@ TYPE_INTERNAL_TRANSFER_ITEM = b"InternalTransferItem(address fromSubaccount,addr
 #: leaves the details to ``digest``, because the fields that matter were already
 #: shown to whoever signed the proof.
 TYPE_MULTISIG_SUBMIT = b"IntentionTransaction_MultisigSubmit(string intentionChain,address account,string operation,uint64 nonce,bytes32 digest)"
-
-_VAULT_OPERATION_NAMES = {
-    VaultTxVariant.CREATE: b"vault_create",
-    VaultTxVariant.DEPOSIT: b"vault_deposit",
-    VaultTxVariant.WITHDRAW: b"vault_withdraw",
-    VaultTxVariant.CLP_CONFIG: b"vault_clp_config",
-    VaultTxVariant.CLP_MANAGED_ACCOUNT: b"vault_clp_managed_account",
-    VaultTxVariant.CLP_TRADER_ALLOWLIST_UPDATE: b"vault_clp_trader_allowlist_update",
-    VaultTxVariant.SET_PARAMS: b"vault_set_params",
-    VaultTxVariant.SET_STATUS: b"vault_set_status",
-    VaultTxVariant.CLP_BATCH_CREATE_MANAGED_ACCOUNTS: b"vault_clp_batch_create_managed_accounts",
-    VaultTxVariant.DISTRIBUTE: b"vault_distribute",
-}
 
 
 def _enc_address_array(owners: Sequence[bytes]) -> bytes:
@@ -274,15 +256,6 @@ def _execute_fields(payload: GatedPayload, head: List[bytes], tail: List[bytes])
         assert isinstance(inner, CreateSubAccount)
         return TYPE_CREATE_SUBACCOUNT, head + [
             enc_string(inner.name.encode()),
-            enc_uint(inner.nonce),
-        ] + tail
-
-    if payload.variant == GatedPayloadVariant.VAULT:
-        name = _VAULT_OPERATION_NAMES.get(inner.variant)
-        if name is None:
-            return None
-        return TYPE_VAULT_OPERATION, head + [
-            enc_string(name),
             enc_uint(inner.nonce),
         ] + tail
 

@@ -6,9 +6,8 @@ Python SDK currently recommends, what it simplifies compared with the earlier
 approach, and how to keep using the fine-grained clients, the pure builders and
 the low-level transaction objects.
 
-It covers user-level capabilities only. Under the unified entry point, vaults are
-read-only and there are no vault transaction shortcuts; admin and system
-configuration are out of scope.
+It covers user-level capabilities only; admin and system configuration are out
+of scope.
 
 ## 1. Which integration path to choose
 
@@ -146,7 +145,6 @@ The unified object's main namespaces:
 | `sdk.accounts` | subaccounts, agents, transfers and cross-subaccount settings |
 | `sdk.markets` | fetching market configuration and caching the resolver |
 | `sdk.realtime` | the lazily created WebSocket client |
-| `sdk.vaults` | read-only vault queries |
 | `sdk.intention` | the underlying chain client, still available |
 | `sdk.executor` | the underlying build, submit and poll orchestration, still available |
 
@@ -524,8 +522,8 @@ payload = DexOrderlessTx(
 
 Converting an existing account and the day-to-day operations follow the same
 shape: `MultisigOpInstall` / `MultisigOpUpdatePolicy` / `MultisigOpRemove` /
-`MultisigOpRotateKey`, and `MultisigOpExecute(GatedPayload....)` for the four gated
-kinds (transfers, vaults, agents, creating a subaccount). A few rules that are
+`MultisigOpRotateKey`, and `MultisigOpExecute(GatedPayload....)` for the three gated
+kinds (transfers, agents, creating a subaccount). A few rules that are
 easy to get wrong:
 
 - `approval_digest()` returning `None` does not mean "not supported yet"; it is a
@@ -557,9 +555,10 @@ easy to get wrong:
   compare.
 
 The cross-language fixed vectors are `multisig_signing_vectors.json` in the
-chain, and `tests/testdata/` here holds a copy.
+chain, and `tests/testdata/` here holds a copy without the validator cases, which
+this SDK does not build.
 `test_multisig_vectors.py` reproduces, byte for byte, the BCS, operation id and
-approval digest of 18 operations, plus the derived address, the challenge digest
+approval digest of 17 operations, plus the derived address, the challenge digest
 and the whole envelope. Changing any one of those bytes invalidates every owner
 signature already collected.
 
@@ -924,8 +923,8 @@ once the behaviour matches.
 10. `await sdk.close()` on shutdown to release the HTTP and WebSocket resources.
 11. Keep private keys in a secure server-side signer, never in logs, error
     reports or source code.
-12. Vault transactions and admin/system configuration do not go through this
-    unified user entry point.
+12. Admin/system configuration does not go through this unified user entry
+    point.
 
 ## 15. Frequently asked questions
 

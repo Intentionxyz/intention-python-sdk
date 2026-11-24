@@ -100,28 +100,6 @@ from intention_sdk.transactions import (
     SignedTransaction,
     TransactionPayload,
 )
-from intention_sdk.transactions.vault_payloads import (
-    VaultClpBatchCreateManagedAccountsTx,
-    VaultClpConfigTx,
-    VaultClpManagedAccountTx,
-    VaultClpTraderAllowlistUpdateTx,
-    VaultCreateTx,
-    VaultDepositTx,
-    VaultDistributeTx,
-    VaultSetParamsTx,
-    VaultSetStatusTx,
-    VaultTx,
-    VaultWithdrawTx,
-)
-from intention_sdk.types.vault import (
-    ClpTraderAllowlistAction,
-    ClpTraderAllowlistEntry,
-    ManagedAccountAction,
-    SubaccountId,
-    SymbolAccountsEntry,
-    VaultStatus,
-    VaultTxVariant,
-)
 
 _PRIVATE_KEY = "0x1111111111111111111111111111111111111111111111111111111111111111"
 _CLIENT_ORDER_ID = "0x0123456789abcdef0123456789abcdef"
@@ -132,8 +110,6 @@ _AGENT_ADDRESS = AccountAddress.from_str("0x" + "22" * 32)
 _AGENT_EXPIRY = 9999999999
 _SUBACCOUNT_ADDRESS = AccountAddress.from_str("0x" + "33" * 32)
 _MASTER_ADDRESS = AccountAddress.from_str("0x" + "44" * 32)
-_VAULT_SUB = SubaccountId(b"\xab" * 32, 3, b"\xcd" * 32)
-_VAULT_TRADER = AccountAddress.from_str("0x" + "99" * 32)
 _SPOT_TICKER = b"BTC-USDC".ljust(32, b"\x00")
 _MAX_NOTIONAL = bytes([0x40, 0x42, 0x0F]) + b"\x00" * 13
 _ADMIN_ADDRESS = AccountAddress.from_str("0x" + "aa" * 32)
@@ -1381,144 +1357,6 @@ class TestJsonSubmitUserConfig(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             generate_submit_transaction_request(raw_tx, authenticator)
-
-
-def _build_vault(vault_tx):
-    return _build_orderless(DexOrderlessTxVariant.VAULT, vault_tx)
-
-
-class TestJsonSubmitVault(unittest.TestCase):
-    def _check(self, vault_tx, fixture_name):
-        raw_tx, authenticator = _build_vault(vault_tx)
-        rendered = generate_submit_transaction_request(raw_tx, authenticator)
-        self.assertEqual(rendered, _load_fixture(fixture_name))
-        return rendered
-
-    def test_create(self):
-        self._check(
-            VaultTx(
-                VaultTxVariant.CREATE,
-                VaultCreateTx(
-                    _NONCE, 86400, True, 5000000000, "alpha-vault", "delta neutral"
-                ),
-            ),
-            "vault_create",
-        )
-
-    def test_deposit(self):
-        self._check(
-            VaultTx(VaultTxVariant.DEPOSIT, VaultDepositTx(7, _NONCE, 100000000)),
-            "vault_deposit",
-        )
-
-    def test_withdraw(self):
-        self._check(
-            VaultTx(VaultTxVariant.WITHDRAW, VaultWithdrawTx(7, _NONCE, 250000)),
-            "vault_withdraw",
-        )
-
-    def test_distribute(self):
-        self._check(
-            VaultTx(VaultTxVariant.DISTRIBUTE, VaultDistributeTx(7, _NONCE, 1000000)),
-            "vault_distribute",
-        )
-
-    def test_clp_config_full(self):
-        self._check(
-            VaultTx(
-                VaultTxVariant.CLP_CONFIG,
-                VaultClpConfigTx(
-                    _NONCE,
-                    True,
-                    _VAULT_SUB,
-                    [SymbolAccountsEntry(5, [_VAULT_SUB])],
-                    [ClpTraderAllowlistEntry(_VAULT_SUB, [_VAULT_TRADER])],
-                ),
-            ),
-            "vault_clp_config",
-        )
-
-    def test_clp_config_minimal_omits_optionals(self):
-        rendered = self._check(
-            VaultTx(VaultTxVariant.CLP_CONFIG, VaultClpConfigTx(_NONCE, False)),
-            "vault_clp_config_minimal",
-        )
-        payload = rendered["payload"]
-        self.assertNotIn("primary_account", payload)
-        self.assertNotIn("symbol_accounts", payload)
-        self.assertNotIn("allowlist", payload)
-
-    def test_clp_managed_account_with_memo(self):
-        self._check(
-            VaultTx(
-                VaultTxVariant.CLP_MANAGED_ACCOUNT,
-                VaultClpManagedAccountTx(
-                    _NONCE, _VAULT_SUB, ManagedAccountAction.UPSERT, "ops"
-                ),
-            ),
-            "vault_clp_managed_account",
-        )
-
-    def test_clp_managed_account_no_memo(self):
-        rendered = self._check(
-            VaultTx(
-                VaultTxVariant.CLP_MANAGED_ACCOUNT,
-                VaultClpManagedAccountTx(
-                    _NONCE, _VAULT_SUB, ManagedAccountAction.DISABLE
-                ),
-            ),
-            "vault_clp_managed_account_no_memo",
-        )
-        self.assertNotIn("memo", rendered["payload"])
-
-    def test_clp_trader_allowlist_update(self):
-        self._check(
-            VaultTx(
-                VaultTxVariant.CLP_TRADER_ALLOWLIST_UPDATE,
-                VaultClpTraderAllowlistUpdateTx(
-                    _NONCE, _VAULT_SUB, ClpTraderAllowlistAction.ADD, [_VAULT_TRADER]
-                ),
-            ),
-            "vault_clp_trader_allowlist_update",
-        )
-
-    def test_clp_batch_create(self):
-        self._check(
-            VaultTx(
-                VaultTxVariant.CLP_BATCH_CREATE_MANAGED_ACCOUNTS,
-                VaultClpBatchCreateManagedAccountsTx(
-                    _NONCE, _VAULT_TRADER, 10, 5, "bot-", "batch memo"
-                ),
-            ),
-            "vault_clp_batch_create",
-        )
-
-    def test_set_params_partial(self):
-        rendered = self._check(
-            VaultTx(VaultTxVariant.SET_PARAMS, VaultSetParamsTx(_NONCE, 7, 1000, 500)),
-            "vault_set_params",
-        )
-        payload = rendered["payload"]
-        self.assertNotIn("lockup_seconds", payload)
-        self.assertNotIn("always_proportional_close", payload)
-
-    def test_set_params_full(self):
-        self._check(
-            VaultTx(
-                VaultTxVariant.SET_PARAMS,
-                VaultSetParamsTx(_NONCE, 7, 1000, 500, 86400, True),
-            ),
-            "vault_set_params_full",
-        )
-
-    def test_set_status(self):
-        self._check(
-            VaultTx(
-                VaultTxVariant.SET_STATUS,
-                VaultSetStatusTx(_NONCE, 7, VaultStatus.PAUSED),
-            ),
-            "vault_set_status",
-        )
 
 
 # ---- multisig ------------------------------------------------------------

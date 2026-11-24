@@ -52,13 +52,6 @@ from . import (
     TransactionPayload,
     is_cross_transfer_orderless_payload,
 )
-from .vault_payloads import VaultTx
-from ..types.vault import (
-    ClpTraderAllowlistAction,
-    ManagedAccountAction,
-    VaultStatus,
-    VaultTxVariant,
-)
 
 _ZERO_ADDRESS = b"\x00" * 32
 
@@ -169,10 +162,6 @@ def _render_dex_orderless_payload(dex_orderless: DexOrderlessTx) -> Dict[str, An
         dex_orderless.inner, DexUserConfigTx
     ):
         return _render_dex_user_config_payload(dex_orderless.inner)
-    if dex_orderless.variant == DexOrderlessTxVariant.VAULT and isinstance(
-        dex_orderless.inner, VaultTx
-    ):
-        return _render_vault_payload(dex_orderless.inner)
     if dex_orderless.variant == DexOrderlessTxVariant.MULTISIG:
         return _render_multisig_payload(dex_orderless.inner)
     raise UnsupportedJsonPayloadError(_describe_dex_orderless(dex_orderless))
@@ -294,167 +283,6 @@ def _render_place_order(order: DexPlaceOrder, grouping: int) -> Dict[str, Any]:
     if order.client_order_id is not None:
         payload["client_order_id"] = order.client_order_id
     return payload
-
-
-def _render_vault_payload(vault_tx: VaultTx) -> Dict[str, Any]:
-    variant = vault_tx.variant
-    v = vault_tx.inner
-    base = {"type": "dex_orderless_payload", "dex_type": "vault_payload"}
-    if variant == VaultTxVariant.CREATE:
-        return {
-            **base,
-            "vault_type": "create",
-            "nonce": str(v.nonce),
-            "lockup_seconds": int(v.lockup_seconds),
-            "always_proportional_close": bool(v.always_proportional_close),
-            "initial_deposit_usdc": str(v.initial_deposit_usdc),
-            "vault_name": v.vault_name,
-            "strategy_description": v.strategy_description,
-        }
-    if variant == VaultTxVariant.DEPOSIT:
-        return {
-            **base,
-            "vault_type": "deposit",
-            "vault_id": str(v.vault_id),
-            "nonce": str(v.nonce),
-            "amount_usdc": str(v.amount_usdc),
-        }
-    if variant == VaultTxVariant.WITHDRAW:
-        return {
-            **base,
-            "vault_type": "withdraw",
-            "vault_id": str(v.vault_id),
-            "nonce": str(v.nonce),
-            "withdraw_shares": str(v.withdraw_shares),
-        }
-    if variant == VaultTxVariant.DISTRIBUTE:
-        return {
-            **base,
-            "vault_type": "distribute",
-            "vault_id": str(v.vault_id),
-            "nonce": str(v.nonce),
-            "distribute_amount_usdc": str(v.distribute_amount_usdc),
-        }
-    if variant == VaultTxVariant.CLP_CONFIG:
-        payload = {
-            **base,
-            "vault_type": "clp_config",
-            "nonce": str(v.nonce),
-            "bootstrap": bool(v.bootstrap),
-        }
-        if v.primary_account is not None:
-            payload["primary_account"] = _render_vault_subaccount_id(v.primary_account)
-        if v.symbol_accounts is not None:
-            payload["symbol_accounts"] = [
-                _render_vault_symbol_accounts_entry(entry)
-                for entry in v.symbol_accounts
-            ]
-        if v.allowlist is not None:
-            payload["allowlist"] = [
-                _render_vault_clp_trader_allowlist_entry(entry) for entry in v.allowlist
-            ]
-        return payload
-    if variant == VaultTxVariant.CLP_MANAGED_ACCOUNT:
-        payload = {
-            **base,
-            "vault_type": "clp_managed_account",
-            "nonce": str(v.nonce),
-            "account": _render_vault_subaccount_id(v.account),
-            "action": _render_managed_account_action(v.action),
-        }
-        if v.memo is not None:
-            payload["memo"] = v.memo
-        return payload
-    if variant == VaultTxVariant.CLP_TRADER_ALLOWLIST_UPDATE:
-        return {
-            **base,
-            "vault_type": "clp_trader_allowlist_update",
-            "nonce": str(v.nonce),
-            "clp_account": _render_vault_subaccount_id(v.clp_account),
-            "action": _render_allowlist_action(v.action),
-            "traders": [trader.to_string_long() for trader in v.traders],
-        }
-    if variant == VaultTxVariant.CLP_BATCH_CREATE_MANAGED_ACCOUNTS:
-        return {
-            **base,
-            "vault_type": "clp_batch_create_managed_accounts",
-            "nonce": str(v.nonce),
-            "address": v.address.to_string_long(),
-            "start_number": int(v.start_number),
-            "count": int(v.count),
-            "user_name_prefix": v.user_name_prefix,
-            "memo": v.memo,
-        }
-    if variant == VaultTxVariant.SET_PARAMS:
-        payload = {
-            **base,
-            "vault_type": "set_params",
-            "nonce": str(v.nonce),
-            "vault_id": str(v.vault_id),
-        }
-        if v.daily_withdraw_limit_bps is not None:
-            payload["daily_withdraw_limit_bps"] = int(v.daily_withdraw_limit_bps)
-        if v.min_free_balance_ratio_bps is not None:
-            payload["min_free_balance_ratio_bps"] = int(v.min_free_balance_ratio_bps)
-        if v.lockup_seconds is not None:
-            payload["lockup_seconds"] = int(v.lockup_seconds)
-        if v.always_proportional_close is not None:
-            payload["always_proportional_close"] = bool(v.always_proportional_close)
-        return payload
-    if variant == VaultTxVariant.SET_STATUS:
-        return {
-            **base,
-            "vault_type": "set_status",
-            "nonce": str(v.nonce),
-            "vault_id": str(v.vault_id),
-            "target_status": _render_vault_status(v.target_status),
-        }
-    raise UnsupportedJsonPayloadError("Vault payloads (unknown variant)")
-
-
-def _render_vault_subaccount_id(sub: Any) -> Dict[str, Any]:
-    return {
-        "address": _hex(sub.address),
-        "number": int(sub.number),
-        "sub_address": _hex(sub.sub_address),
-    }
-
-
-def _render_vault_symbol_accounts_entry(entry: Any) -> Dict[str, Any]:
-    return {
-        "symbol_id": int(entry.symbol_id),
-        "accounts": [_render_vault_subaccount_id(a) for a in entry.accounts],
-    }
-
-
-def _render_vault_clp_trader_allowlist_entry(entry: Any) -> Dict[str, Any]:
-    return {
-        "clp_account": _render_vault_subaccount_id(entry.clp_account),
-        "traders": [trader.to_string_long() for trader in entry.traders],
-    }
-
-
-def _render_managed_account_action(action: Any) -> str:
-    value = _validate_enum("managed_account action", action, ManagedAccountAction)
-    if value == int(ManagedAccountAction.UPSERT):
-        return "upsert"
-    if value == int(ManagedAccountAction.DISABLE):
-        return "disable"
-    return "remove"
-
-
-def _render_allowlist_action(action: Any) -> str:
-    value = _validate_enum("allowlist action", action, ClpTraderAllowlistAction)
-    return "add" if value == int(ClpTraderAllowlistAction.ADD) else "remove"
-
-
-def _render_vault_status(status: Any) -> str:
-    value = _validate_enum("target_status", status, VaultStatus)
-    if value == int(VaultStatus.ACTIVE):
-        return "active"
-    if value == int(VaultStatus.PAUSED):
-        return "paused"
-    return "closed"
 
 
 def _render_dex_user_config_payload(user_config_tx: DexUserConfigTx) -> Dict[str, Any]:
@@ -730,8 +558,6 @@ def _render_gated_payload(payload: Any) -> Dict[str, Any]:
     variant = getattr(payload, "variant", None)
     if variant == GatedPayloadVariant.DEX_TRANSFER:
         return _render_dex_transfer_payload(inner)
-    if variant == GatedPayloadVariant.VAULT:
-        return _render_vault_payload(inner)
     if variant == GatedPayloadVariant.DEX_AGENT:
         return _render_dex_agent_payload(inner)
     if variant == GatedPayloadVariant.CREATE_SUB_ACCOUNT:
@@ -1049,8 +875,7 @@ def _replay_protection_nonce(raw: RawTransaction) -> Optional[str]:
 
 def _dex_orderless_nonce(dex_orderless: DexOrderlessTx) -> int:
     # The nonce lives directly on the inner tx (DexTx / DexTransferTx / DexAgentTx),
-    # on its config payload (DexUserConfig / DexSystemConfig), or on a wrapped inner
-    # (Vault). Probe in that order.
+    # or on its config payload (DexUserConfig / DexSystemConfig). Probe in that order.
     inner = dex_orderless.inner
     nonce = getattr(inner, "nonce", None)
     if nonce is not None:
@@ -1059,10 +884,6 @@ def _dex_orderless_nonce(dex_orderless: DexOrderlessTx) -> int:
     config_nonce = getattr(config, "nonce", None) if config is not None else None
     if config_nonce is not None:
         return config_nonce
-    wrapped = getattr(inner, "inner", None)
-    wrapped_nonce = getattr(wrapped, "nonce", None) if wrapped is not None else None
-    if wrapped_nonce is not None:
-        return wrapped_nonce
     raise ValueError("cannot determine replay_protection_nonce for payload")
 
 

@@ -42,7 +42,6 @@ class TestUnifiedClient(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(trader.sub_address, AccountAddress.from_str("0x0"))
         self.assertEqual(sdk.config.relayer_url, "http://localhost:3000")
-        self.assertIsInstance(sdk.vaults, intention_sdk.VaultClient)
         self.assertIs(intention_sdk.IntentionClient, IntentionClient)
         await sdk.close()
 

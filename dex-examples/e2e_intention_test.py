@@ -51,29 +51,10 @@ except ModuleNotFoundError:
     def load_dotenv(*args, **kwargs):
         return False
 
-from _common import (
-    build_and_submit_dex_orderless,
-    generate_nonce,
-    get_optional_int_env,
-)
+
+from _common import get_optional_int_env
 from _json_request_coverage import run_captured_json_request_coverage
-from intention_sdk import (
-    ConditionType,
-    CreatedBy,
-    DexOrderlessTx,
-    DexOrderlessTxVariant,
-    DexOrders,
-    DexOrdersVariant,
-    DexPlaceOrder,
-    DexPlaceOrders,
-    DexTx,
-    OrderBasicType,
-    OrderPositionMode,
-    Side,
-    SymbolType,
-    TimeInForce,
-    TriggerPriceType,
-)
+from intention_sdk import ClientConfig, IntentionClient, OrderInput, OrderType
 
 load_dotenv()
 
@@ -178,64 +159,63 @@ async def _run_minimal_lane() -> int:
 
 
 async def _run_enhanced_lane() -> int:
-    from _common import bootstrap_enhanced_lane, create_rest_client, get_mark_price
-    from _common import run_live_preflight
+    from _common import (
+        bootstrap_enhanced_lane,
+        get_dex_rest_api_url,
+        get_node_url,
+        run_live_preflight,
+    )
 
     preflight = await run_live_preflight()
     _print_preflight_details(preflight)
     if not preflight["ok"]:
         return _emit_verdict("ENV-FAIL", [], ENV_FAIL_EXIT)
 
-    rest_client = create_rest_client()
-    account = preflight["account"]
+    sdk = IntentionClient(
+        signer=preflight["account"],
+        node_url=get_node_url(),
+        relayer_url=get_dex_rest_api_url(),
+        client_config=ClientConfig(trust_env=False),
+    )
     symbol_id = _get_enhanced_symbol_id()
     subaccount_id = _get_enhanced_subaccount_id()
 
     try:
         bootstrap = await bootstrap_enhanced_lane(
-            rest_client,
-            account,
+            sdk.rest_client,
+            sdk.signer,
             preferred_symbol_id=symbol_id,
             preferred_subaccount_id=subaccount_id,
         )
         symbol_id = bootstrap["symbol_id"]
         subaccount_id = bootstrap["subaccount_number"]
-        sub_address = bootstrap["sub_address"]
-        mark_price = await get_mark_price(symbol_id)
-        market_subticks = max(1, int(mark_price * 1.10) * 100_000)
-        order = DexPlaceOrder(
-            sub_address=sub_address,
-            symbol_id=symbol_id,
-            symbol_type=SymbolType.PERPETUAL,
-            side=Side.BUY,
-            quantums=1_000_000,
-            subticks=market_subticks,
-            trigger_subticks=0,
-            order_basic_type=OrderBasicType.MARKET,
-            time_in_force=TimeInForce.IOC,
-            condition_type=ConditionType.UNSPECIFIED,
-            trigger_price_type=TriggerPriceType.LAST_PRICE,
-            target_order_id=0,
-            reduce_only=False,
-            position_mode=OrderPositionMode.NET,
-            slippage_tolerance_ppm=100000,
+        resolver = await sdk.markets.get_resolver()
+        symbol = next(
+            (
+                name
+                for name in resolver.symbols()
+                if resolver.symbol_id(name) == symbol_id
+            ),
+            None,
         )
-        nonce = generate_nonce()
-        dex_orders = DexOrders(DexOrdersVariant.PLACE, [DexPlaceOrders([order])])
-        dex_tx = DexTx(nonce, dex_orders, CreatedBy.USER)
-        orderless = DexOrderlessTx(DexOrderlessTxVariant.DEX, dex_tx)
-        result = await build_and_submit_dex_orderless(
-            rest_client, account, orderless
+        if not symbol:
+            raise ValueError(f"Symbol ID {symbol_id} is not an active Relayer market")
+        trader = sdk.trader(sub_address=bootstrap["sub_address"], resolver=resolver)
+        result = await trader.place_order(
+            OrderInput(
+                symbol=symbol,
+                side="BUY",
+                type=OrderType.MARKET,
+                size=os.getenv("SIZE", "0.01"),
+            ),
+            throw_on_order_reject=True,
         )
         return _emit_verdict(
             "PASS",
             [
                 "Lane: enhanced",
-                f"Submitted live DEX orderless transaction hash={result['hash']}",
-                (
-                    "Bootstrap source: "
-                    f"{preflight['account_source']}"
-                ),
+                f"Confirmed live DEX orderless transaction hash={result.hash}",
+                ("Bootstrap source: " f"{preflight['account_source']}"),
                 (
                     "Bootstrap details: "
                     f"subaccount={subaccount_id}, available_margin="
@@ -255,10 +235,7 @@ async def _run_enhanced_lane() -> int:
             [
                 "Lane: enhanced",
                 f"Live DEX orderless submission failed: {exc}",
-                (
-                    "Bootstrap source: "
-                    f"{preflight['account_source']}"
-                ),
+                ("Bootstrap source: " f"{preflight['account_source']}"),
                 (
                     "Enhanced inputs: "
                     f"TEST_SYMBOL_ID={symbol_id}, TEST_SUBACCOUNT_ID={subaccount_id}"
@@ -267,7 +244,7 @@ async def _run_enhanced_lane() -> int:
             LIVE_FAIL_EXIT,
         )
     finally:
-        await rest_client.close()
+        await sdk.close()
 
 
 async def _run_json_coverage_lane() -> int:
@@ -281,18 +258,12 @@ async def _run_json_coverage_lane() -> int:
                     "Captured JSON submit requests: "
                     f"{result['json_case_count']} payload cases"
                 ),
-                (
-                    "Payload families: "
-                    f"{', '.join(result['payload_families'])}"
-                ),
+                ("Payload families: " f"{', '.join(result['payload_families'])}"),
                 (
                     "Helper default content type: "
                     f"{result['helper_default_content_type']}"
                 ),
-                (
-                    "BCS opt-out content type: "
-                    f"{result['bcs_opt_out_content_type']}"
-                ),
+                ("BCS opt-out content type: " f"{result['bcs_opt_out_content_type']}"),
             ],
             PASS_EXIT,
         )

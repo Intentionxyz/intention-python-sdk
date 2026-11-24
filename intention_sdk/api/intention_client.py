@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-import re
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from ..core.account import Account
@@ -29,7 +28,6 @@ from ..transactions.order_intents import (
     OrderType,
     TpSlLeg,
 )
-from .vault_client import VaultClient
 from .websocket_client import IntentionWebSocketClient, WebSocketFactory
 
 
@@ -406,10 +404,6 @@ class IntentionClient:
             trust_env=self.rest_client.client_config.trust_env,
             submit_options=submit_options,
             query=query,
-        )
-        vault_base = re.sub(r"/v1/?$", "", resolved_node_url)
-        self.vaults = VaultClient(
-            vault_base, trust_env=self.rest_client.client_config.trust_env
         )
 
     @property

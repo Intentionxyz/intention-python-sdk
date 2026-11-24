@@ -141,7 +141,7 @@ class RawOrderlessInnerTest(unittest.TestCase):
             DexOrderlessTxVariant.DEX_USER_CONFIG,
             DexOrderlessTxVariant.DEX_TRANSFER,
             DexOrderlessTxVariant.DEX_AGENT,
-            DexOrderlessTxVariant.VAULT,
+            DexOrderlessTxVariant.MULTISIG,
         ):
             with self.subTest(variant=variant):
                 got = _serialize(

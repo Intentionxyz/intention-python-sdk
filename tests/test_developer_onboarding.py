@@ -46,12 +46,6 @@ class TestDeveloperOnboarding(unittest.TestCase):
         self.assertIsNotNone(OrderBasicType)
         self.assertIsNotNone(TimeInForce)
 
-    def test_import_vault_types(self):
-        from intention_sdk import VaultClient, VaultState
-
-        self.assertIsNotNone(VaultClient)
-        self.assertIsNotNone(VaultState)
-
     def test_import_transaction_helpers(self):
         from intention_sdk import (
             build_transaction,
